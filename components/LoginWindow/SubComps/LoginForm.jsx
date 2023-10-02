@@ -1,3 +1,4 @@
+import Link from "next/link";
 import FormField from "./FormField";
 
 const LoginForm = () => {
@@ -18,8 +19,8 @@ const LoginForm = () => {
                 />
             </form>
             <button className="
-                w-full 
-                p-2 
+                flex
+                w-full
                 rounded-lg 
                 text-center 
                 bg-tif-blue 
@@ -30,7 +31,7 @@ const LoginForm = () => {
                 
                 transition-all"
             >
-                Login
+                <Link href="/dashboard" className="w-full h-full p-2">Login</Link>
             </button>
         </section>
     );

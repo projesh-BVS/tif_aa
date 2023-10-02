@@ -1,10 +1,12 @@
+"use client"
+
 import DashHeader from '@/components/Dashboard/DashHeader'
 import DashSidebar from '@/components/Dashboard/DashSidebar'
-import { Inter } from 'next/font/google'
+import { Roboto_Flex } from 'next/font/google'
 
-const inter = Inter({ subsets: ['latin'] })
+const roboto = Roboto_Flex({ subsets: ['latin'] })
 
-export const metadata = {
+const metadata = {
     title: 'TIF Dashboard',
     description: 'Administrator dashboard for Try It First',
 }
@@ -12,7 +14,7 @@ export const metadata = {
 export default function DashboardLayout({ children }) {
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body className={roboto.className}>
                 <main className="flex w-screen h-screen">
                     <section>
                         <DashSidebar/>
