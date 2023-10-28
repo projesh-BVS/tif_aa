@@ -43,7 +43,7 @@ const ProductCard = ({ productInfo }) => {
           </h2>
           <div className="flex flex-col xl:flex-row gap-2">
             <Link
-              href={"/dashboard/products/" + productInfo.productID}
+              href={"/dashboard/products/edit/" + productInfo.productID}
               className="w-full"
             >
               <button className="flex pl-2 pr-4 w-full items-center justify-center gap-4 h-10 rounded-lg text-md text-white bg-tif-blue hover:bg-tif-lavender hover:shadow-md whitespace-nowrap transition-all">

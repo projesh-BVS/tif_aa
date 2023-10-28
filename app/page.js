@@ -9,7 +9,8 @@ export default function Home() {
     import("@google/model-viewer")
       .then(({ ModelViewerElement }) => {
         // Here, ModelViewerElement is now available and can be used.
-        customElements.define("model-viewer", ModelViewerElement);
+        customElements.get("model-viewer") ||
+          customElements.define("model-viewer", ModelViewerElement);
       })
       .catch((error) => {
         console.error("Error loading Model Viewer", error);

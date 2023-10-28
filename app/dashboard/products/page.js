@@ -69,7 +69,10 @@ function Products() {
               onChange={setSelectedBrand}
             />
 
-            <Link href={"/dashboard/locked"} className="w-full md:w-auto">
+            <Link
+              href={"/dashboard/products/addproduct/"}
+              className="w-full md:w-auto"
+            >
               <button className="flex pl-2 pr-4 w-full md:w-auto items-center justify-center gap-4 h-10 rounded-lg text-md text-white bg-tif-blue hover:bg-tif-lavender hover:shadow-md whitespace-nowrap transition-all">
                 <PlusIcon className="h-6 w-6" />
                 <h1 className="font-semibold text-md">Add Product</h1>

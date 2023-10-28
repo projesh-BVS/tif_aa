@@ -1,6 +1,6 @@
 {
   "name": "tif_aa",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@google/model-viewer": "^3.3.0",
+    "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-drag-drop-files": "^2.3.10",
     "swr": "^2.2.4"
   },
   "devDependencies": {
