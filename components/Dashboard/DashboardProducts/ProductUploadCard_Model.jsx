@@ -1,13 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import { FileUploader } from "react-drag-drop-files";
+import axios from 'axios';
 import {
   CheckCircleIcon,
   CloudArrowUpIcon,
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-const ProductUploadCard_Model = () => {
+const ProductUploadCard_Model = ({handleFile}) => {
   useEffect(() => {
     // This is where we will initialize Model Viewer.
     // We'll do this asynchronously because it's a heavy operation.
@@ -55,21 +56,25 @@ const ProductUploadCard_Model = () => {
           glbLink={glbFile}
           usdzLink={usdzFile}
           posterLink={posterFile}
+          
         />
         <FileUploadCard
           displayName={"GLB"}
           fileTypes={["glb", "gltf"]}
           fileSelectedCallback={fileSelected}
+          handleFile={handleFile}
         />
         <FileUploadCard
           displayName={"USDZ"}
           fileTypes={["usdz"]}
           fileSelectedCallback={fileSelected}
+          handleFile={handleFile}
         />
         <FileUploadCard
           displayName={"Poster"}
           fileTypes={["png", "webp"]}
           fileSelectedCallback={fileSelected}
+          handleFile={handleFile}
         />
       </div>
     </section>
@@ -169,6 +174,7 @@ export function FileUploadCard({
   displayName,
   fileTypes,
   fileSelectedCallback,
+  handleFile
 }) {
   const [file, setFile] = useState(null);
   const [isTypeError, setTypeError] = useState(false);
@@ -179,7 +185,9 @@ export function FileUploadCard({
     setTypeError(false);
     fileSelectedCallback(file, fileTypes);
     console.log("file dropped " +fileTypes[0]);
-    if(fileTypes!="glb" &&  fileTypes!="usdz")
+    if(fileTypes[0]=="glb" ||  fileTypes[0]=="usdz")
+      handleUpload("tryitproductmodels",file,fileTypes)
+    else if(fileTypes[0]=="webp" ||  fileTypes[0]=="png")
       handleUpload("tryitproductimages",file,fileTypes)
   };
   const handleTypeError = (err) => {
@@ -193,7 +201,7 @@ export function FileUploadCard({
    
     // Get signed URL from your backend
     const response = await axios.get('https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/get_signed_url', {
-      params: { bucket_name: bucketName, file_type: fileType }
+      params: { bucket_name: bucketName, file_type: fileType[0] }
     });
     const { upload_url } = response.data;
     const { file_key } = response.data;
@@ -204,7 +212,10 @@ export function FileUploadCard({
     console.log( file)
     // Upload file to S3 using signed URL
     await axios.put(upload_url, file);
-
+    if(fileTypes[0]=="glb" ||  fileTypes[0]=="usdz")
+      handleFile(fileType[0],`https://${bucketName}.s3.amazonaws.com/${file_key}` )
+    else
+      handleFile("poster",`https://${bucketName}.s3.amazonaws.com/${file_key}` )
     // Store the file URL or any other action you want to perform after uploading
     //await setFields({ ...fields, [fileName]: `https://${bucketName}.s3.amazonaws.com/${file_key}` });
 
