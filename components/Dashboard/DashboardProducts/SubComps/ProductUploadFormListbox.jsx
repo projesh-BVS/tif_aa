@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckCircleIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 
@@ -9,9 +9,13 @@ const ProductUploadFormListbox = ({
   onOptionSelect,
   showBelow = true,
 }) => {
-  const [selectedOption, setSelectedOption] = useState(optionsArray[0]);
-  const [bekarMaal, rakhBekarMaal] = useState(true);
+  const [options, setOptions] = useState(optionsArray);
+  console.log("List box recived " + optionsArray[0].display)
+  const [selectedOption, setSelectedOption] = useState(optionsArray[0]); //This selected option is set after render 
+  
 
+
+console.log("rerendering listbox")
   function handleOnChange(option) {
     setSelectedOption(option);
     onOptionSelect(option);
