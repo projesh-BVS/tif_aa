@@ -6,6 +6,8 @@ import ProductUploadCard_Model from "@/components/Dashboard/DashboardProducts/Pr
 import ProductUploadCard_Pricing from "@/components/Dashboard/DashboardProducts/ProductUploadCard_Pricing";
 import useOwner from "@/hooks/useOwner";
 import { Fragment, useState, useEffect } from "react";
+import axios from 'axios';
+
 import {
   CloudArrowUpIcon,
   PlusCircleIcon,
@@ -22,8 +24,8 @@ const AddProduct = () => {
       description: '',
       price: '',
       currency: '',
-      discountPercent: '',
-      discountedPrice: '',
+      discountPercent: 0,
+      discountedPrice: 0,
       category: '',
       weight: '',
       weightUnit:'',
@@ -31,7 +33,7 @@ const AddProduct = () => {
       height: '',
       width: '',
       length: '',
-      dimentionUnit:'',
+      dimensionUnit:'',
     });
   
 
@@ -52,6 +54,14 @@ const AddProduct = () => {
     console.log("name " + name + " value " +value )
     setFields({ ...fields, [name]: value });
   }
+
+  const handleSubmit = async (event) => {
+    // Submit all data to your backend
+    event.preventDefault();
+      console.log(fields)
+    await axios.post('https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/add_product', fields);
+    
+  };
 
   useEffect(() => {
   
@@ -102,7 +112,7 @@ const AddProduct = () => {
           </section>
 
           <section className="flex px-6 gap-4 w-full items-center justify-center">
-            <ProductUploadCard_About brandList={owner.brandList} handleChange={handleChange} />
+            <ProductUploadCard_About brandList={owner.brandList} handleChange={handleChange} handleDropdown = {handleDropdown} />
           </section>
 
           <section className="flex px-6 gap-4 w-full items-center justify-center">
@@ -115,7 +125,8 @@ const AddProduct = () => {
 
           <section className="flex px-6 pb-6 gap-4 w-full items-center justify-center">
             <button
-              disabled={true}
+              disabled={false}
+              onClick={handleSubmit}
               className="flex p-4 gap-4 items-center justify-center w-full rounded-xl hover:shadow-lg disabled:shadow-none font-semibold text-lg text-white bg-green-500 hover:bg-green-700 disabled:bg-green-500/40 transition-all"
             >
               <span>

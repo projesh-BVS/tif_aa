@@ -1,10 +1,10 @@
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import ProductUploadFormField from "./SubComps/ProductUploadFormField";
 import ProductUploadFormListbox from "./SubComps/ProductUploadFormListbox";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
-const ProductUploadCard_About = ({ brandList , handleChange }) => {
+const ProductUploadCard_About = ({ brandList , handleChange , handleDropdown }) => {
   var formattedBrandList = GetFormattedBrands(brandList);
   const [currSelectedBrand, setCurrSelectedBrand] = useState(
     formattedBrandList[0]
@@ -15,6 +15,17 @@ const ProductUploadCard_About = ({ brandList , handleChange }) => {
   const [currSelectedCategory, setCurrSelectedCategory] = useState(
     formattedCategoryList[0]
   );
+
+  useEffect(() => {
+  
+    handleDropdown("brandID",currSelectedBrand.id)
+  }, [currSelectedBrand]);
+
+  useEffect(() => {
+  
+    handleDropdown("category",currSelectedCategory.display)
+  }, [currSelectedCategory]);
+
 
 
   return (    

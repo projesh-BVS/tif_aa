@@ -14,7 +14,7 @@ const ProductUploadCard_Dimensions = ({handleChange , handleDropdown}) => {
 
   useEffect(() => {
   
-    handleDropdown("dimentionUnit",selectedDimUnit.display)
+    handleDropdown("dimensionUnit",selectedDimUnit.display)
   }, [selectedDimUnit]);
 
   useEffect(() => {
