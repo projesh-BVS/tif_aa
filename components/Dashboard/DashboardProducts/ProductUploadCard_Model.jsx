@@ -178,7 +178,9 @@ export function FileUploadCard({
     setFile(file);
     setTypeError(false);
     fileSelectedCallback(file, fileTypes);
-    console.log(file);
+    console.log("file dropped " +fileTypes[0]);
+    if(fileTypes!="glb" &&  fileTypes!="usdz")
+      handleUpload("tryitproductimages",file,fileTypes)
   };
   const handleTypeError = (err) => {
     setTypeError(true);
@@ -186,6 +188,31 @@ export function FileUploadCard({
   const handleDragStateChange = (dragging) => {
     setIsInDropZone(dragging);
   };
+
+  const handleUpload = async (bucketName, file, fileType) => {
+   
+    // Get signed URL from your backend
+    const response = await axios.get('https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/get_signed_url', {
+      params: { bucket_name: bucketName, file_type: fileType }
+    });
+    const { upload_url } = response.data;
+    const { file_key } = response.data;
+
+    console.log("signed url response " )
+    console.log(response.data)
+    console.log("the file going to be uploaded " )
+    console.log( file)
+    // Upload file to S3 using signed URL
+    await axios.put(upload_url, file);
+
+    // Store the file URL or any other action you want to perform after uploading
+    //await setFields({ ...fields, [fileName]: `https://${bucketName}.s3.amazonaws.com/${file_key}` });
+
+    //console.log(fields);
+  };
+
+
+
 
   return (
     <FileUploader

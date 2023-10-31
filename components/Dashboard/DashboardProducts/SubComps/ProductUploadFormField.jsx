@@ -5,6 +5,7 @@ const ProductUploadFormField = ({
   fieldLabel,
   multiline = false,
   resizable = true,
+  handleChange
 }) => {
   if (multiline) {
     return (
@@ -37,6 +38,7 @@ const ProductUploadFormField = ({
                     
                     transition-all`}
           placeholder={fieldLabel}
+          onChange={handleChange}
         />
         <label
           htmlFor={fieldID}
@@ -99,6 +101,7 @@ const ProductUploadFormField = ({
                     
                     transition-all"
           placeholder={fieldLabel}
+          onChange={handleChange}
         />
         <label
           htmlFor={fieldID}

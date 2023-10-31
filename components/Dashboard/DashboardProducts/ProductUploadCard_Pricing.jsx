@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductUploadFormField from "./SubComps/ProductUploadFormField";
 import ProductUploadFormListbox from "./SubComps/ProductUploadFormListbox";
 import { getCurrencyUnits } from "@/utils/productUnitsUtils";
@@ -7,8 +7,14 @@ import { TagIcon } from "@heroicons/react/24/solid";
 
 const currencyUnits = getCurrencyUnits();
 
-const ProductUploadCard_Pricing = () => {
+const ProductUploadCard_Pricing = ({handleChange , handleDropdown}) => {
   const [selectedCurrUnit, setSelectedCurrUnit] = useState(currencyUnits[0]);
+
+  useEffect(() => {
+  
+    handleDropdown("currency",selectedCurrUnit.display)
+  }, [selectedCurrUnit]);
+
 
   return (
     <section className="flex flex-col gap-2 items-center justify-between w-full rounded-2xl shadow-md bg-white">
@@ -28,9 +34,10 @@ const ProductUploadCard_Pricing = () => {
         <div className="col-span-full xl:col-span-3">
           <ProductUploadFormField
             fieldID="productPrice"
-            fieldName="productPrice"
+            fieldName="price"
             fieldType="number"
             fieldLabel="Price"
+            handleChange={handleChange}
           />
         </div>
         <div className="col-span-full xl:col-span-1">
@@ -39,6 +46,7 @@ const ProductUploadCard_Pricing = () => {
             fieldName="discountPercent"
             fieldType="number"
             fieldLabel="Discount %"
+            handleChange={handleChange}
           />
         </div>
       </div>

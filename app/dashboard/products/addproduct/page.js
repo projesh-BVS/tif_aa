@@ -5,6 +5,7 @@ import ProductUploadCard_Dimensions from "@/components/Dashboard/DashboardProduc
 import ProductUploadCard_Model from "@/components/Dashboard/DashboardProducts/ProductUploadCard_Model";
 import ProductUploadCard_Pricing from "@/components/Dashboard/DashboardProducts/ProductUploadCard_Pricing";
 import useOwner from "@/hooks/useOwner";
+import { Fragment, useState, useEffect } from "react";
 import {
   CloudArrowUpIcon,
   PlusCircleIcon,
@@ -14,13 +15,56 @@ import {
 const AddProduct = () => {
   const { owner, isOwnerLoading, isOwnerError } = useOwner(1);
 
+  
+    const [fields, setFields] = useState({
+      brandID: '',
+      name: '',
+      description: '',
+      price: '',
+      currency: '',
+      discountPercent: '',
+      discountedPrice: '',
+      category: '',
+      weight: '',
+      weightUnit:'',
+      materials: 'default',
+      height: '',
+      width: '',
+      length: '',
+      dimentionUnit:'',
+    });
+  
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log("name " + name + " value " +value )
+    setFields({ ...fields, [name]: value });
+  };
+
+  function handleDropdown(name, value) {
+    // Do something with name and value
+    console.log("name " + name + " value " +value )
+    setFields({ ...fields, [name]: value });
+  }
+
+  function handleFile(name, value) {
+    // Do something with name and value
+    console.log("name " + name + " value " +value )
+    setFields({ ...fields, [name]: value });
+  }
+
+  useEffect(() => {
+  
+    console.log("form values " +  JSON.stringify(fields));
+  }, [fields]);
+
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">
       <DashPageHeader
         icon={<PlusCircleIcon className="h-8 w-8" />}
         text="Add Product"
         isLoading={isOwnerLoading}
-        showBackBtn={true}
+        showBackBtn={false}
       />
       {isOwnerLoading && (
         <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-gray-500">
@@ -54,19 +98,19 @@ const AddProduct = () => {
       {owner && owner.ownerDetails.length > 0 && !isOwnerError && (
         <form className="flex flex-col gap-6 items-center w-full h-full overflow-auto -mt-6">
           <section className="flex px-6 gap-4 w-full items-center justify-center">
-            <ProductUploadCard_Model />
+            <ProductUploadCard_Model handleFile={handleFile} />
           </section>
 
           <section className="flex px-6 gap-4 w-full items-center justify-center">
-            <ProductUploadCard_About brandList={owner.brandList} />
+            <ProductUploadCard_About brandList={owner.brandList} handleChange={handleChange} />
           </section>
 
           <section className="flex px-6 gap-4 w-full items-center justify-center">
-            <ProductUploadCard_Dimensions />
+            <ProductUploadCard_Dimensions handleChange={handleChange} handleDropdown = {handleDropdown} />
           </section>
 
           <section className="flex px-6 gap-4 w-full items-center justify-center">
-            <ProductUploadCard_Pricing />
+            <ProductUploadCard_Pricing  handleChange={handleChange} handleDropdown = {handleDropdown} />
           </section>
 
           <section className="flex px-6 pb-6 gap-4 w-full items-center justify-center">

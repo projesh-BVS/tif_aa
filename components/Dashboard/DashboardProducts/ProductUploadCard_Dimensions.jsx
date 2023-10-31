@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductUploadFormField from "./SubComps/ProductUploadFormField";
 import ProductUploadFormListbox from "./SubComps/ProductUploadFormListbox";
 import { CubeIcon } from "@heroicons/react/24/solid";
@@ -8,9 +8,19 @@ import { getDimensionUnits, getWeightUnits } from "@/utils/productUnitsUtils";
 const dimensionUnits = getDimensionUnits();
 const weightUnits = getWeightUnits();
 
-const ProductUploadCard_Dimensions = () => {
+const ProductUploadCard_Dimensions = ({handleChange , handleDropdown}) => {
   const [selectedDimUnit, setSelectedDimUnit] = useState(dimensionUnits[0]);
   const [selectedWtUnit, setSelectedWtUnit] = useState(weightUnits[0]);
+
+  useEffect(() => {
+  
+    handleDropdown("dimentionUnit",selectedDimUnit.display)
+  }, [selectedDimUnit]);
+
+  useEffect(() => {
+  
+    handleDropdown("weightUnit",selectedWtUnit.display)
+  }, [selectedWtUnit]);
 
   return (
     <section className="flex flex-col gap-2 items-center justify-between w-full rounded-2xl shadow-md bg-white">
@@ -24,6 +34,7 @@ const ProductUploadCard_Dimensions = () => {
             labelText="LxWxH Unit"
             optionsArray={dimensionUnits}
             onOptionSelect={setSelectedDimUnit}
+           
           />
         </div>
         <div className="col-span-full md:col-span-1">
@@ -35,27 +46,31 @@ const ProductUploadCard_Dimensions = () => {
         </div>
         <ProductUploadFormField
           fieldID="productLength"
-          fieldName="productLength"
+          fieldName="length"
           fieldType="number"
           fieldLabel="Length"
+          handleChange={handleChange}
         />
         <ProductUploadFormField
           fieldID="productWidth"
-          fieldName="productWidth"
+          fieldName="width"
           fieldType="number"
           fieldLabel="Width"
+          handleChange={handleChange}
         />
         <ProductUploadFormField
           fieldID="productHeight"
-          fieldName="productHeight"
+          fieldName="height"
           fieldType="number"
           fieldLabel="Height"
+          handleChange={handleChange}
         />
         <ProductUploadFormField
           fieldID="productWeight"
-          fieldName="productWeight"
+          fieldName="weight"
           fieldType="number"
           fieldLabel="Weight"
+          handleChange={handleChange}
         />
       </div>
     </section>

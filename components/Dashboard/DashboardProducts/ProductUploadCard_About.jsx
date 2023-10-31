@@ -4,7 +4,7 @@ import ProductUploadFormListbox from "./SubComps/ProductUploadFormListbox";
 import { useState } from "react";
 
 
-const ProductUploadCard_About = ({ brandList }) => {
+const ProductUploadCard_About = ({ brandList , handleChange }) => {
   var formattedBrandList = GetFormattedBrands(brandList);
   const [currSelectedBrand, setCurrSelectedBrand] = useState(
     formattedBrandList[0]
@@ -45,23 +45,26 @@ const ProductUploadCard_About = ({ brandList }) => {
       
         <ProductUploadFormField
           fieldID="productName"
-          fieldName="productName"
+          fieldName="name"
           fieldType="text"
           fieldLabel="Product Name"
+          handleChange={handleChange}
         />
         <ProductUploadFormField
           fieldID="productTags"
-          fieldName="productTags"
+          fieldName="itemTags"
           fieldType="text"
           fieldLabel="Product Tags"
+          handleChange={handleChange}
         />
         <div className="col-span-full">
           <ProductUploadFormField
             fieldID="productDescription"
-            fieldName="productDescription"
+            fieldName="description"
             fieldType="text"
             fieldLabel="Product Description"
             multiline={true}
+            handleChange={handleChange}
           />
         </div>
       </div>
