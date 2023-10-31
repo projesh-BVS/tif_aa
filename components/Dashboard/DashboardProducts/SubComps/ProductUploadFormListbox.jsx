@@ -8,16 +8,29 @@ const ProductUploadFormListbox = ({
   optionsArray,
   onOptionSelect,
   showBelow = true,
-}) => {
-  const [options, setOptions] = useState(optionsArray);
-  console.log("List box recived " + optionsArray[0].display)
-  const [selectedOption, setSelectedOption] = useState(optionsArray[0]); //This selected option is set after render 
+  isDependant = false,
+}) => {  
   
+  const [selectedOption, setSelectedOption] = useState(optionsArray[0]); //This selected option is set after render 
+  const [options, setOptions] = useState(optionsArray);
+
+useEffect(() => {
+  
+  setOptions(optionsArray)
+}, [optionsArray[0].display]);
+
+useEffect(() => {
+  if(isDependant)
+  {   
+    console.log("options reset") ;
+    setSelectedOption(options[0])
+  }  
+}, [options]);
 
 
-console.log("rerendering listbox")
   function handleOnChange(option) {
     setSelectedOption(option);
+    
     onOptionSelect(option);
     console.log(labelText + " | Option changed to on click: " + option.display);
   }
@@ -71,10 +84,10 @@ console.log("rerendering listbox")
             className={`${
               showBelow ? "top-full mt-2" : "bottom-full mb-2"
             } absolute py-1 px-1 z-20 max-h-60 w-full overflow-auto rounded-lg bg-tif-grey border-2 border-tif-blue text-sm lg:text-base shadow-md ring-1 ring-black/5 focus:outline-none`}
-          >
-            {optionsArray.map((option) => (
+          >            
+            {optionsArray.map((option) => (              
               <Listbox.Option
-                key={option.key}
+                key={option.id}
                 value={option}
                 className={({ active }) =>
                   `relative cursor-default select-none py-2 pl-10 pr-4 rounded-md ${
@@ -88,8 +101,8 @@ console.log("rerendering listbox")
                       className={`block truncate ${
                         selected ? "font-medium" : "font-normal"
                       }`}
-                    >
-                      {option.display}
+                    >                      
+                      { option.display}
                     </span>
                     {selected ? (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-tif-white">
