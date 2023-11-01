@@ -46,7 +46,7 @@ const ProductUploadCard_Dimensions = ({handleChange , handleDropdown}) => {
         </div>
         <ProductUploadFormField
           fieldID="productLength"
-          fieldName="length"
+          fieldName="productLength"
           fieldType="number"
           fieldLabel="Length"
           handleChange={handleChange}

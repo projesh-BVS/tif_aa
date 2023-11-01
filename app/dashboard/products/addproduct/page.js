@@ -20,7 +20,7 @@ const AddProduct = () => {
   const [fields, setFields] = useState({
     brandID: "",
     productID:1698810128507,
-    name: "",
+    productName: "",
     description: "",
     price: "",
     currency: "",
@@ -32,7 +32,7 @@ const AddProduct = () => {
     materials: "default",
     height: "",
     width: "",
-    length: "",
+    productLength: "",
     dimensionUnit: "",
   });
 
@@ -64,7 +64,7 @@ const AddProduct = () => {
     event.preventDefault();
     console.log(fields);
     await axios.post(
-      "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/add_product",
+      "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/edit_product",
       fields
     );
   };
