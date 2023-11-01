@@ -19,7 +19,7 @@ const AddProduct = () => {
 
   const [fields, setFields] = useState({
     brandID: "",
-    productID:"",
+    productID:1698810128507,
     name: "",
     description: "",
     price: "",
@@ -42,10 +42,15 @@ const AddProduct = () => {
     setFields({ ...fields, [name]: value });
   };
 
-  function handleDropdown(name, value) {
+  async function handleDropdown(name, value) {
     // Do something with name and value
     console.log("name " + name + " value " + value);
-    setFields({ ...fields, [name]: value });
+    //setFields({ ...fields, [name]: value });
+
+    setFields(prevFields => ({
+      ...prevFields,
+      [name]: value
+    }));
   }
 
   function handleFile(name, value) {
@@ -143,7 +148,7 @@ const AddProduct = () => {
                 <CloudArrowUpIcon className="h-6 w-6" />
               </span>
               <span>Upload Product</span>
-              {isLoading && <LoadingIndicator />}
+              
             </button>
             <button
               disabled={true}

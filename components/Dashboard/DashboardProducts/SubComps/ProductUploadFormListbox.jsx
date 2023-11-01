@@ -17,6 +17,8 @@ const ProductUploadFormListbox = ({
 useEffect(() => {
   
   setOptions(optionsArray)
+  
+  
 }, [optionsArray[0].display]);
 
 useEffect(() => {
@@ -24,7 +26,9 @@ useEffect(() => {
   {   
     console.log("options reset") ;
     setSelectedOption(options[0])
+    handleOnChange(options[0])
   }  
+  
 }, [options]);
 
 
@@ -34,6 +38,12 @@ useEffect(() => {
     onOptionSelect(option);
     console.log(labelText + " | Option changed to on click: " + option.display);
   }
+
+
+  useEffect(() => {
+    handleOnChange(optionsArray[0])
+    
+  }, []);
 
   return (
     <Listbox value={selectedOption} by="id" onChange={handleOnChange}>
