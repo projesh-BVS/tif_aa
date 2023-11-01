@@ -17,13 +17,13 @@ const ProductUploadCard_About = ({ brandList , handleChange , handleDropdown }) 
   );
 
   useEffect(() => {
-    console.log("Setting initial brand ")
+   // console.log("Setting initial brand ")
     handleDropdown("brandID",currSelectedBrand.id)
   }, [currSelectedBrand]);
 
   useEffect(() => {
   
-    console.log("Setting initial category ")
+   // console.log("Setting initial category ")
     handleDropdown("category",currSelectedCategory.display)
   }, [currSelectedCategory]);
 

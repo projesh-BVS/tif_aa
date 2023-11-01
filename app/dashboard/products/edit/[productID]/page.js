@@ -1,118 +1,280 @@
 "use client";
 import DashPageHeader from "@/components/Dashboard/DashPageHeader";
-import useProduct from "@/hooks/useProduct";
-import { getFormattedPrice } from "@/utils/productInfoUtils";
-import { ShoppingBagIcon } from "@heroicons/react/24/solid";
-import React from "react";
+import ProductUploadCard_About from "@/components/Dashboard/DashboardProducts/ProductUploadCard_About";
+import ProductUploadCard_Dimensions from "@/components/Dashboard/DashboardProducts/ProductUploadCard_Dimensions";
+import ProductUploadCard_Model from "@/components/Dashboard/DashboardProducts/ProductUploadCard_Model";
+import ProductUploadCard_Pricing from "@/components/Dashboard/DashboardProducts/ProductUploadCard_Pricing";
+import useOwner from "@/hooks/useOwner";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
-const ProductView = ({ params }) => {
+import {
+  CloudArrowUpIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/solid";
+import LoadingIndicator from "@/components/Common/LoadingIndicator";
+import ModalDialog from "@/components/Common/ModalDialog";
+import useProduct from "@/hooks/useProduct";
+
+const EditProduct = ({ params }) => {
+  const router = useRouter();
+
   const { product, isProductLoading, isProductError } = useProduct(
     params.productID
   );
+  //console.log(product);
 
-  console.log(product);
+  useEffect(() => {
+    if (product) {
+      console.log("Product info loaded: " + JSON.stringify(product.data));
+      SetProductData(product);
+    }
+  }, [product]);
+
+  const { owner, isOwnerLoading, isOwnerError } = useOwner(1);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isFormFilled, setIsFormFilled] = useState(false);
+  const [showUploadStatus, setShowUploadStatus] = useState(false);
+
+  const uploadMessageSuccess = {
+    Title: "Product Upload Successful",
+    Description: "Your product was uploaded succesfully.",
+    ButtonText: "Continue",
+  };
+  const uploadMessageError = {
+    Title: "Product Upload Failed",
+    Description: "Please try again.",
+    ButtonText: "Close",
+  };
+
+  const [uploadMessageCurrent, setUploadMessageCurrent] =
+    useState(uploadMessageError);
+
+  function UploadMsgOnClose() {
+    setShowUploadStatus(false);
+    //router.push("/dashboard/products");
+  }
+
+  const handleDiscard = (event) => {
+    event.preventDefault();
+    router.push("/dashboard/products");
+  };
+
+  const [fields, setFields] = useState({
+    brandID: "",
+    productID: 1698810128507,
+    productName: "",
+    description: "",
+    price: "",
+    currency: "",
+    discountPercent: "",
+    discountedPrice: 0,
+    category: "",
+    weight: "",
+    weightUnit: "",
+    materials: "default",
+    pHeight: "",
+    pWidth: "",
+    productLength: "",
+    dimensionUnit: "",
+    glb: "",
+    usdz: "",
+    poster: "",
+  });
+
+ 
+
+  const isFormValid = () => {
+    return Object.values(fields).every((value) => value || value === 0); //We accept 0 as valid number input
+  };
+
+   function SetProductData( product ) {
+     //Set fields
+     console.log(JSON.stringify(product.data));
+     setFields(JSON.parse(JSON.stringify(product.data)));
+   }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    // console.log("name " + name + " value " + value);
+    setFields({ ...fields, [name]: value });
+  };
+
+  async function handleDropdown(name, value) {
+    // Do something with name and value
+    //console.log("name " + name + " value " + value);
+    //setFields({ ...fields, [name]: value });
+
+    setFields((prevFields) => ({
+      ...prevFields,
+      [name]: value,
+    }));
+  }
+
+  function handleFile(name, value) {
+    // Do something with name and value
+    //console.log("name " + name + " value " + value);
+    setFields({ ...fields, [name]: value });
+  }
+
+  const handleSubmit = async (event) => {
+    // Submit all data to your backend
+    event.preventDefault();
+    if (isFormValid()) {
+      //console.log(fields);
+      setIsUploading(true);
+      try {
+        const response = await axios.post(
+          "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/edit_product",
+          fields
+        );
+
+        if (response.status === 200) {
+          //console.log("Uploading done");
+          setUploadMessageCurrent(uploadMessageSuccess);
+          setShowUploadStatus(true);
+        } else {
+          //console.log("Data saving failed");
+          setUploadMessageCurrent(uploadMessageError);
+          setShowUploadStatus(true);
+        }
+      } catch (err) {
+        //console.log("amar log " + err);
+        //console.log("Data saving failed");
+        setUploadMessageCurrent(uploadMessageError);
+        setShowUploadStatus(true);
+      }
+      setIsUploading(false);
+    } else {
+      //console.log("Filed is incomplete");
+    }
+  };
+
+  useEffect(() => {
+    console.log("form values " + JSON.stringify(fields));
+   setIsFormFilled(isFormValid());
+  }, [fields]);
 
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">
-      <DashPageHeader
-        icon={<ShoppingBagIcon className="h-8 w-8" />}
-        text={"Viewing Product - " + params.productID}
-        isLoading={isProductLoading}
-        showBackBtn={true}
+      <ModalDialog
+        dialogText={uploadMessageCurrent.Title}
+        dialogSubtext={uploadMessageCurrent.Description}
+        btnText={uploadMessageCurrent.ButtonText}
+        doOpen={showUploadStatus}
+        closeCallback={UploadMsgOnClose}
       />
+      <DashPageHeader
+        icon={<PencilSquareIcon className="h-8 w-8" />}
+        text={"Editing Product - " + params.productID}
+        isLoading={isProductLoading || isOwnerLoading}
+        showBackBtn={false}
+      />
+      {isOwnerLoading ||
+        (isProductLoading && (
+          <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-gray-500">
+            <span className="font-semibold lg:text-xl">Preparing Form</span>
+            <span className="font-light text-xs lg:text-sm">Please wait</span>
+          </section>
+        ))}
 
-      {isProductLoading && (
-        <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-gray-500">
-          <span className="font-semibold lg:text-xl">Loading Brands</span>
-          <span className="font-light text-xs lg:text-sm">Please wait</span>
-        </section>
-      )}
+      {(owner && owner.ownerDetails.length == 0) ||
+        (product && product.data == null && !isProductLoading && (
+          <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-red-500">
+            <span className="font-semibold lg:text-xl">
+              Sorry, there was an error while loading data
+            </span>
+            <span className="font-light text-xs lg:text-sm">
+              Please refresh the page if you still see an error after 30 secs
+            </span>
+          </section>
+        ))}
 
-      {product && product.data == null && !isProductLoading && (
-        <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-red-500">
-          <span className="font-semibold lg:text-xl">
-            Sorry, there was an error while loading data
-          </span>
-          <span className="font-light text-xs lg:text-sm">
-            Please refresh the page if you still see an error after 30 secs
-          </span>
-        </section>
-      )}
+      {isOwnerError ||
+        (isProductError && (
+          <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-red-500">
+            <span className="font-semibold lg:text-xl">
+              Sorry, there was an error while loading data
+            </span>
+            <span className="font-light text-xs lg:text-sm">
+              Please refresh the page if you still see an error after 30 secs
+            </span>
+          </section>
+        ))}
 
-      {isProductError && (
-        <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-red-500">
-          <span className="font-semibold lg:text-xl">
-            Sorry, there was an error while loading data
-          </span>
-          <span className="font-light text-xs lg:text-sm">
-            Please refresh the page if you still see an error after 30 secs
-          </span>
-        </section>
-      )}
+      {owner &&
+        owner.ownerDetails.length > 0 &&
+        !isOwnerError &&
+        product &&
+        product.data != null &&
+        !isProductError && (
+          <form className="flex flex-col gap-6 items-center w-full h-full overflow-auto -mt-6">
+            <section className="flex px-6 gap-4 w-full items-center justify-center">
+              <ProductUploadCard_Model handleFile={handleFile} fieldsData={fields} />
+            </section>
 
-      {product && product.data != null && !isProductError && (
-        <section className="flex flex-col xl:flex-row px-6 gap-4 -mt-6 w-full">
-          <div
-            id="card"
-            className="flex flex-col gap-4 w-full xl:w-1/2 justify-center items-center relative shadow-md rounded-lg"
-          >
-            <model-viewer
-              src={product.data.glb}
-              ios-src={product.data.usdz}
-              poster={product.data.poster}
-              alt="3D model of the product"
-              shadow-intensity="1"
-              camera-controls
-              touch-action="pan-y"
-              auto-rotate
-              ar
-              ar-scale="fixed"
-              style={{
-                backgroundColor: "white",
-                minHeight: 18 + "rem",
-                height: 100 + "%",
-                borderRadius: 0.5 + "rem",
-              }}
-            >
+            <section className="flex px-6 gap-4 w-full items-center justify-center">
+              <ProductUploadCard_About
+                brandList={owner.brandList}
+                handleChange={handleChange}
+                handleDropdown={handleDropdown}
+              />
+            </section>
+
+            <section className="flex px-6 gap-4 w-full items-center justify-center">
+              <ProductUploadCard_Dimensions
+                handleChange={handleChange}
+                handleDropdown={handleDropdown}
+              />
+            </section>
+
+            <section className="flex px-6 gap-4 w-full items-center justify-center">
+              <ProductUploadCard_Pricing
+                handleChange={handleChange}
+                handleDropdown={handleDropdown}
+              />
+            </section>
+
+            <section className="flex px-6 pb-6 gap-4 w-full items-center justify-center">
               <button
-                slot="ar-button"
-                id="ar-button"
-                className="bg-blue-500 shadow-lg p-2 text-white text-xs rounded-lg w-full bottom-0 absolute"
+                disabled={isUploading || isFormFilled === false}
+                onClick={handleSubmit}
+                type="Submit"
+                className="flex p-4 gap-4 items-center justify-center w-full rounded-xl hover:shadow-lg disabled:shadow-none font-semibold text-lg text-white bg-green-500 hover:bg-green-700 disabled:bg-green-500/40 transition-all"
               >
-                View product in AR
+                {isUploading && (
+                  <>
+                    <LoadingIndicator />
+                    <span>Uploading...</span>
+                  </>
+                )}
+
+                {!isUploading && (
+                  <>
+                    <span>
+                      <CloudArrowUpIcon className="h-6 w-6" />
+                    </span>
+                    <span>Update Product</span>
+                  </>
+                )}
               </button>
-            </model-viewer>
-          </div>
-          <div className="flex flex-col gap-2 w-full text-gray-500">
-            <h1 className="text-md xl:text-2xl font-semibold">
-              {product.data.name}
-            </h1>
-            <div className="flex gap-2">
-              <h2 className="text-md xl:text-xl font-semibold text-white bg-tif-blue w-max p-2 rounded-md">
-                {getFormattedPrice(product.data.currency, product.data.price)}
-              </h2>
-              <h2 className="text-md xl:text-xl font-semibold text-white bg-tif-blue w-max p-2 rounded-md">
-                {"L: " +
-                  product.data.length +
-                  " x W: " +
-                  product.data.width +
-                  " x H: " +
-                  product.data.height +
-                  " " +
-                  product.data.dimensionUnit}
-              </h2>
-              <h2 className="text-md xl:text-xl font-semibold text-white bg-tif-blue w-max p-2 rounded-md">
-                {"Wt: " + product.data.weight + " " + product.data.weightUnit}
-              </h2>
-            </div>
-            <p className="text-sm xl:text-lg font-medium italic">
-              {product.data.description}
-            </p>
-          </div>
-        </section>
-      )}
+              <button
+                disabled={isUploading}
+                onClick={handleDiscard}
+                className="flex p-4 gap-4 items-center justify-center w-full rounded-xl hover:shadow-lg disabled:shadow-none font-semibold text-lg text-white bg-red-500 hover:bg-red-700 disabled:bg-red-500/40 transition-all"
+              >
+                <span>
+                  <TrashIcon className="h-6 w-6" />
+                </span>
+                <span>Discard</span>
+              </button>
+            </section>
+          </form>
+        )}
     </main>
   );
 };
 
-export default ProductView;
+export default EditProduct;

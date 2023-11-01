@@ -85,7 +85,7 @@ const ProductView = ({ params }) => {
           </div>
           <div className="flex flex-col gap-2 w-full text-gray-500">
             <h1 className="text-md xl:text-2xl font-semibold">
-              {product.data.name}
+              {product.data.productName}
             </h1>
             <div className="flex gap-2">
               <h2 className="text-md xl:text-xl font-semibold text-white bg-tif-blue w-max p-2 rounded-md">
@@ -93,7 +93,7 @@ const ProductView = ({ params }) => {
               </h2>
               <h2 className="text-md xl:text-xl font-semibold text-white bg-tif-blue w-max p-2 rounded-md">
                 {"L: " +
-                  product.data.length +
+                  product.data.productLength +
                   " x W: " +
                   product.data.width +
                   " x H: " +

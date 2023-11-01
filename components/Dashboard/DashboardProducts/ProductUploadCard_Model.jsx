@@ -8,7 +8,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-const ProductUploadCard_Model = ({ handleFile }) => {
+const ProductUploadCard_Model = ({ handleFile, fieldsData }) => {
   useEffect(() => {
     // This is where we will initialize Model Viewer.
     // We'll do this asynchronously because it's a heavy operation.

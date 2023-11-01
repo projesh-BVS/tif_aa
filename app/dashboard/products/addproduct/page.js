@@ -17,10 +17,10 @@ import {
 import LoadingIndicator from "@/components/Common/LoadingIndicator";
 import ModalDialog from "@/components/Common/ModalDialog";
 
-const AddProduct = () => {  
+const AddProduct = () => {
   const router = useRouter();
   const { owner, isOwnerLoading, isOwnerError } = useOwner(1);
-  const [isUploading, setIsUploading] = useState(false)
+  const [isUploading, setIsUploading] = useState(false);
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [showUploadStatus, setShowUploadStatus] = useState(false);
 
@@ -33,18 +33,26 @@ const AddProduct = () => {
     Title: "Product Upload Failed",
     Description: "Please try again.",
     ButtonText: "Close",
-  };  
+  };
 
-  const [uploadMessageCurrent, setUploadMessageCurrent] = useState(uploadMessageError)  
+  const [uploadMessageCurrent, setUploadMessageCurrent] =
+    useState(uploadMessageError);
 
   function UploadMsgOnClose() {
     setShowUploadStatus(false);
-    //router.push("/dashboard/products");    
+    //router.push("/dashboard/products");
   }
+
+  const handleDiscard = (event) => {
+    event.preventDefault();
+    router.push("/dashboard/products");
+  };
+
+  
 
   const [fields, setFields] = useState({
     brandID: "",
-    productID:1698810128507,
+    productID: 1698810128507,
     productName: "",
     description: "",
     price: "",
@@ -55,48 +63,46 @@ const AddProduct = () => {
     weight: "",
     weightUnit: "",
     materials: "default",
-    height: "",
-    width: "",
+    pHeight: "",
+    pWidth: "",
     productLength: "",
     dimensionUnit: "",
-    glb:"",
-    usdz:"",
-    poster:""
-  });  
+    glb: "",
+    usdz: "",
+    poster: "",
+  });
 
   const isFormValid = () => {
-    return Object.values(fields).every(value => value || value === 0);  //We accept 0 as valid number input
+    return Object.values(fields).every((value) => value || value === 0); //We accept 0 as valid number input
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log("name " + name + " value " + value);
+    //console.log("name " + name + " value " + value);
     setFields({ ...fields, [name]: value });
   };
 
   async function handleDropdown(name, value) {
     // Do something with name and value
-    console.log("name " + name + " value " + value);
+    //console.log("name " + name + " value " + value);
     //setFields({ ...fields, [name]: value });
 
-    setFields(prevFields => ({
+    setFields((prevFields) => ({
       ...prevFields,
-      [name]: value
+      [name]: value,
     }));
   }
 
   function handleFile(name, value) {
     // Do something with name and value
-    console.log("name " + name + " value " + value);
+    //console.log("name " + name + " value " + value);
     setFields({ ...fields, [name]: value });
   }
 
   const handleSubmit = async (event) => {
     // Submit all data to your backend
     event.preventDefault();
-    if(isFormValid())
-    {
-      
+    if (isFormValid()) {
       console.log(fields);
       setIsUploading(true);
       try {
@@ -114,27 +120,21 @@ const AddProduct = () => {
           setUploadMessageCurrent(uploadMessageError);
           setShowUploadStatus(true);
         }
-       
       } catch (err) {
-        console.log("amar log " + err);console.log("Data saving failed");
+        console.log("amar log " + err);
+        console.log("Data saving failed");
         setUploadMessageCurrent(uploadMessageError);
         setShowUploadStatus(true);
-        
-      
       }
-       setIsUploading(false);
-      
-    }
-    else
-    {
+      setIsUploading(false);
+    } else {
       console.log("Filed is incomplete");
     }
-    
   };
 
   useEffect(() => {
     console.log("form values " + JSON.stringify(fields));
-    setIsFormFilled( isFormValid())
+    setIsFormFilled(isFormValid());
   }, [fields]);
 
   return (
@@ -234,6 +234,7 @@ const AddProduct = () => {
             </button>
             <button
               disabled={isUploading}
+              onClick={handleDiscard}
               className="flex p-4 gap-4 items-center justify-center w-full rounded-xl hover:shadow-lg disabled:shadow-none font-semibold text-lg text-white bg-red-500 hover:bg-red-700 disabled:bg-red-500/40 transition-all"
             >
               <span>

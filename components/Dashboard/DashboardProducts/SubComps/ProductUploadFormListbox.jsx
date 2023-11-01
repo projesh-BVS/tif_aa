@@ -24,7 +24,7 @@ useEffect(() => {
 useEffect(() => {
   if(isDependant)
   {   
-    console.log("options reset") ;
+    //console.log("options reset") ;
     setSelectedOption(options[0])
     handleOnChange(options[0])
   }  
@@ -36,7 +36,7 @@ useEffect(() => {
     setSelectedOption(option);
     
     onOptionSelect(option);
-    console.log(labelText + " | Option changed to on click: " + option.display);
+    //console.log(labelText + " | Option changed to on click: " + option.display);
   }
 
 
