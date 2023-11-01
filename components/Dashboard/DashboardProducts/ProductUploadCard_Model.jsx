@@ -174,7 +174,8 @@ export function FileUploadCard({
   displayName,
   fileTypes,
   fileSelectedCallback,
-  handleFile
+  handleFile,
+  //onUploadCallback
 }) {
   const [file, setFile] = useState(null);
   const [isTypeError, setTypeError] = useState(false);
@@ -183,7 +184,7 @@ export function FileUploadCard({
   const handleChange = (file) => {
     setFile(file);
     setTypeError(false);
-    fileSelectedCallback(file, fileTypes);
+    //fileSelectedCallback(file, fileTypes);
     console.log("file dropped " +fileTypes[0]);
     if(fileTypes[0]=="glb" ||  fileTypes[0]=="usdz")
       handleUpload("tryitproductmodels",file,fileTypes)
@@ -213,9 +214,22 @@ export function FileUploadCard({
     // Upload file to S3 using signed URL
     await axios.put(upload_url, file);
     if(fileTypes[0]=="glb" ||  fileTypes[0]=="usdz")
+    {
       handleFile(fileType[0],`https://${bucketName}.s3.amazonaws.com/${file_key}` )
+      /*if(fileTypes[0]=="glb" )
+        
+      else
+        setUSDZFile(`https://${bucketName}.s3.amazonaws.com/${file_key}`)   */   
+    }
+      
     else
+    {
       handleFile("poster",`https://${bucketName}.s3.amazonaws.com/${file_key}` )
+      //setPosterFile(`https://${bucketName}.s3.amazonaws.com/${file_key}`)
+    }
+      
+    fileSelectedCallback(`https://${bucketName}.s3.amazonaws.com/${file_key}`, fileTypes)
+    //onUploadCallback(`https://${bucketName}.s3.amazonaws.com/${file_key}`)
     // Store the file URL or any other action you want to perform after uploading
     //await setFields({ ...fields, [fileName]: `https://${bucketName}.s3.amazonaws.com/${file_key}` });
 

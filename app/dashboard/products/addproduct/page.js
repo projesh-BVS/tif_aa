@@ -61,6 +61,7 @@ const AddProduct = () => {
       console.log(fields)
     await axios.post('https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/add_product', fields);
     
+    
   };
 
   useEffect(() => {

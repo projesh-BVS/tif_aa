@@ -12,7 +12,7 @@ const ProductUploadCard_Pricing = ({handleChange , handleDropdown}) => {
 
   useEffect(() => {
   
-    handleDropdown("currency",selectedCurrUnit.display)
+    handleDropdown("currency",selectedCurrUnit.apiVal)
   }, [selectedCurrUnit]);
 
 
