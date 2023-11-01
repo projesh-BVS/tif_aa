@@ -6,7 +6,7 @@ import ProductUploadCard_Model from "@/components/Dashboard/DashboardProducts/Pr
 import ProductUploadCard_Pricing from "@/components/Dashboard/DashboardProducts/ProductUploadCard_Pricing";
 import useOwner from "@/hooks/useOwner";
 import { Fragment, useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 
 import {
   CloudArrowUpIcon,
@@ -17,56 +17,55 @@ import {
 const AddProduct = () => {
   const { owner, isOwnerLoading, isOwnerError } = useOwner(1);
 
-  
-    const [fields, setFields] = useState({
-      brandID: '',
-      name: '',
-      description: '',
-      price: '',
-      currency: '',
-      discountPercent: 0,
-      discountedPrice: 0,
-      category: '',
-      weight: '',
-      weightUnit:'',
-      materials: 'default',
-      height: '',
-      width: '',
-      length: '',
-      dimensionUnit:'',
-    });
-  
+  const [fields, setFields] = useState({
+    brandID: "",
+    productID:"",
+    name: "",
+    description: "",
+    price: "",
+    currency: "",
+    discountPercent: 0,
+    discountedPrice: 0,
+    category: "",
+    weight: "",
+    weightUnit: "",
+    materials: "default",
+    height: "",
+    width: "",
+    length: "",
+    dimensionUnit: "",
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log("name " + name + " value " +value )
+    console.log("name " + name + " value " + value);
     setFields({ ...fields, [name]: value });
   };
 
   function handleDropdown(name, value) {
     // Do something with name and value
-    console.log("name " + name + " value " +value )
+    console.log("name " + name + " value " + value);
     setFields({ ...fields, [name]: value });
   }
 
   function handleFile(name, value) {
     // Do something with name and value
-    console.log("name " + name + " value " +value )
+    console.log("name " + name + " value " + value);
     setFields({ ...fields, [name]: value });
   }
 
   const handleSubmit = async (event) => {
     // Submit all data to your backend
     event.preventDefault();
-      console.log(fields)
-    await axios.post('https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/add_product', fields);
-    
-    
+    console.log(fields);
+    await axios.post(
+      "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/add_product",
+      fields
+    );
   };
 
   useEffect(() => {
-  
-    console.log("form values " +  JSON.stringify(fields));
+    console.log("form values " + JSON.stringify(fields));
   }, [fields]);
 
   return (
@@ -113,15 +112,25 @@ const AddProduct = () => {
           </section>
 
           <section className="flex px-6 gap-4 w-full items-center justify-center">
-            <ProductUploadCard_About brandList={owner.brandList} handleChange={handleChange} handleDropdown = {handleDropdown} />
+            <ProductUploadCard_About
+              brandList={owner.brandList}
+              handleChange={handleChange}
+              handleDropdown={handleDropdown}
+            />
           </section>
 
           <section className="flex px-6 gap-4 w-full items-center justify-center">
-            <ProductUploadCard_Dimensions handleChange={handleChange} handleDropdown = {handleDropdown} />
+            <ProductUploadCard_Dimensions
+              handleChange={handleChange}
+              handleDropdown={handleDropdown}
+            />
           </section>
 
           <section className="flex px-6 gap-4 w-full items-center justify-center">
-            <ProductUploadCard_Pricing  handleChange={handleChange} handleDropdown = {handleDropdown} />
+            <ProductUploadCard_Pricing
+              handleChange={handleChange}
+              handleDropdown={handleDropdown}
+            />
           </section>
 
           <section className="flex px-6 pb-6 gap-4 w-full items-center justify-center">
@@ -134,6 +143,7 @@ const AddProduct = () => {
                 <CloudArrowUpIcon className="h-6 w-6" />
               </span>
               <span>Upload Product</span>
+              {isLoading && <LoadingIndicator />}
             </button>
             <button
               disabled={true}

@@ -1,14 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import { FileUploader } from "react-drag-drop-files";
-import axios from 'axios';
+import axios from "axios";
 import {
   CheckCircleIcon,
   CloudArrowUpIcon,
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-const ProductUploadCard_Model = ({handleFile}) => {
+const ProductUploadCard_Model = ({ handleFile }) => {
   useEffect(() => {
     // This is where we will initialize Model Viewer.
     // We'll do this asynchronously because it's a heavy operation.
@@ -56,7 +56,6 @@ const ProductUploadCard_Model = ({handleFile}) => {
           glbLink={glbFile}
           usdzLink={usdzFile}
           posterLink={posterFile}
-          
         />
         <FileUploadCard
           displayName={"GLB"}
@@ -174,22 +173,21 @@ export function FileUploadCard({
   displayName,
   fileTypes,
   fileSelectedCallback,
-  handleFile,
-  //onUploadCallback
+  handleFile,  
 }) {
   const [file, setFile] = useState(null);
   const [isTypeError, setTypeError] = useState(false);
   const [isInDropZone, setIsInDropZone] = useState(false);
+  const [uploadPercent, setUploadPercent] = useState(0);
 
   const handleChange = (file) => {
     setFile(file);
     setTypeError(false);
-    //fileSelectedCallback(file, fileTypes);
-    console.log("file dropped " +fileTypes[0]);
-    if(fileTypes[0]=="glb" ||  fileTypes[0]=="usdz")
-      handleUpload("tryitproductmodels",file,fileTypes)
-    else if(fileTypes[0]=="webp" ||  fileTypes[0]=="png")
-      handleUpload("tryitproductimages",file,fileTypes)
+    console.log("file dropped " + fileTypes[0]);
+    if (fileTypes[0] == "glb" || fileTypes[0] == "usdz")
+      handleUpload("tryitproductmodels", file, fileTypes, setUploadPercent);
+    else if (fileTypes[0] == "webp" || fileTypes[0] == "png")
+      handleUpload("tryitproductimages", file, fileTypes, setUploadPercent);
   };
   const handleTypeError = (err) => {
     setTypeError(true);
@@ -198,46 +196,55 @@ export function FileUploadCard({
     setIsInDropZone(dragging);
   };
 
-  const handleUpload = async (bucketName, file, fileType) => {
-   
+  const handleUpload = async (bucketName, file, fileType, precentageCallback) => {
+    const options = {
+      onUploadProgress: (progressEvent) => {
+        const { loaded, total } = progressEvent;
+        let precentage = Math.floor((loaded * 100) / total);
+
+        precentageCallback(precentage);
+
+        console.log("options");
+        console.log(precentage);
+        if (precentage < 100) {
+          console.log(precentage);
+        }
+      }
+    };
     // Get signed URL from your backend
-    const response = await axios.get('https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/get_signed_url', {
-      params: { bucket_name: bucketName, file_type: fileType[0] }
-    });
+    const response = await axios.get(
+      "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/get_signed_url",
+      {
+        params: { bucket_name: bucketName, file_type: fileType[0] },
+      }
+    );
     const { upload_url } = response.data;
     const { file_key } = response.data;
 
-    console.log("signed url response " )
-    console.log(response.data)
-    console.log("the file going to be uploaded " )
-    console.log( file)
+    console.log("signed url response ");
+    console.log(response.data);
+    console.log("the file going to be uploaded ");
+
+    console.log(file);
     // Upload file to S3 using signed URL
-    await axios.put(upload_url, file);
-    if(fileTypes[0]=="glb" ||  fileTypes[0]=="usdz")
-    {
-      handleFile(fileType[0],`https://${bucketName}.s3.amazonaws.com/${file_key}` )
-      /*if(fileTypes[0]=="glb" )
-        
-      else
-        setUSDZFile(`https://${bucketName}.s3.amazonaws.com/${file_key}`)   */   
+    await axios.put(upload_url, file, options);
+    if (fileTypes[0] == "glb" || fileTypes[0] == "usdz") {
+      handleFile(
+        fileType[0],
+        `https://${bucketName}.s3.amazonaws.com/${file_key}`
+      );
+    } else {
+      handleFile(
+        "poster",
+        `https://${bucketName}.s3.amazonaws.com/${file_key}`
+      );
     }
-      
-    else
-    {
-      handleFile("poster",`https://${bucketName}.s3.amazonaws.com/${file_key}` )
-      //setPosterFile(`https://${bucketName}.s3.amazonaws.com/${file_key}`)
-    }
-      
-    fileSelectedCallback(`https://${bucketName}.s3.amazonaws.com/${file_key}`, fileTypes)
-    //onUploadCallback(`https://${bucketName}.s3.amazonaws.com/${file_key}`)
-    // Store the file URL or any other action you want to perform after uploading
-    //await setFields({ ...fields, [fileName]: `https://${bucketName}.s3.amazonaws.com/${file_key}` });
 
-    //console.log(fields);
+    fileSelectedCallback(
+      `https://${bucketName}.s3.amazonaws.com/${file_key}`,
+      fileTypes
+    );
   };
-
-
-
 
   return (
     <FileUploader
@@ -282,9 +289,9 @@ export function FileUploadCard({
             <br />
             Click To Upload File
           </h1>
-
+          <ProgressBar progressPercent={uploadPercent} doShow={uploadPercent > 0 && uploadPercent < 100}/>
           <h1
-            className={`font-semibold text-tif-lavender ${
+            className={`px-2 w-full font-semibold text-tif-lavender truncate ${
               file ? "" : "hidden"
             }`}
           >
@@ -328,26 +335,16 @@ export function FileUploadCard({
       </div>
     </FileUploader>
   );
-  /*return (
-    <>
-      <button className="hidden lg:flex flex-col p-4 gap-6 items-center justify-center rounded-2xl border-2 border-tif-lavender border-dashed hover:bg-tif-blue/20 hover:shadow-md transition-all">
-        <div className="flex items-center justify-center px-4 py-2 gap-4 text-white bg-gradient-to-br from-tif-blue to-tif-pink rounded-xl shadow-md">
-          <CloudArrowUpIcon width={32} />
-          <h1 className="font-black text-xl uppercase">{displayName}</h1>
-        </div>
-        <h1 className="font-semibold  text-sm text-center text-tif-lavender leading-snug">
-          Drag & Drop
-          <br />
-          - or -
-          <br />
-          Click To Upload File
-        </h1>
-      </button>
+}
 
-      <button className="lg:hidden flex items-center justify-center px-4 py-2 gap-4 rounded-xl text-white bg-tif-blue hover:bg-tif-lavender hover:shadow-md transition-all">
-        <CloudArrowUpIcon width={24} />
-        <h1 className="font-black text-md uppercase">{displayName}</h1>
-      </button>
-    </>
-  );*/
+export function ProgressBar({progressPercent = 0, doShow}) {
+  return (
+    <div className={`w-full bg-gray-200 rounded-full dark:bg-gray-700 ${(doShow) ? "" : "hidden"}`}>
+      <div className={`bg-tif-lavender text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full`} style={{width: `${progressPercent}%`}}>
+        <h1 className="w-full truncate">
+          {progressPercent + "%"}
+        </h1>
+      </div>
+    </div>
+  );
 }
