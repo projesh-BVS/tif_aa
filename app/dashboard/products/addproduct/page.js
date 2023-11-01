@@ -7,15 +7,40 @@ import ProductUploadCard_Pricing from "@/components/Dashboard/DashboardProducts/
 import useOwner from "@/hooks/useOwner";
 import { Fragment, useState, useEffect } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import {
   CloudArrowUpIcon,
   PlusCircleIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
+import LoadingIndicator from "@/components/Common/LoadingIndicator";
+import ModalDialog from "@/components/Common/ModalDialog";
 
-const AddProduct = () => {
+const AddProduct = () => {  
+  const router = useRouter();
   const { owner, isOwnerLoading, isOwnerError } = useOwner(1);
+  const [isUploading, setIsUploading] = useState(false)
+  const [isFormFilled, setIsFormFilled] = useState(false);
+  const [showUploadStatus, setShowUploadStatus] = useState(false);
+
+  const uploadMessageSuccess = {
+    Title: "Product Upload Successful",
+    Description: "Your product was uploaded succesfully.",
+    ButtonText: "Continue",
+  };
+  const uploadMessageError = {
+    Title: "Product Upload Failed",
+    Description: "Please try again.",
+    ButtonText: "Close",
+  };  
+
+  const [uploadMessageCurrent, setUploadMessageCurrent] = useState(uploadMessageError)  
+
+  function UploadMsgOnClose() {
+    setShowUploadStatus(false);
+    //router.push("/dashboard/products");    
+  }
 
   const [fields, setFields] = useState({
     brandID: "",
@@ -24,7 +49,7 @@ const AddProduct = () => {
     description: "",
     price: "",
     currency: "",
-    discountPercent: 0,
+    discountPercent: "",
     discountedPrice: 0,
     category: "",
     weight: "",
@@ -34,7 +59,14 @@ const AddProduct = () => {
     width: "",
     productLength: "",
     dimensionUnit: "",
-  });
+    glb:"",
+    usdz:"",
+    poster:""
+  });  
+
+  const isFormValid = () => {
+    return Object.values(fields).every(value => value || value === 0);  //We accept 0 as valid number input
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,19 +94,58 @@ const AddProduct = () => {
   const handleSubmit = async (event) => {
     // Submit all data to your backend
     event.preventDefault();
-    console.log(fields);
-    await axios.post(
-      "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/edit_product",
-      fields
-    );
+    if(isFormValid())
+    {
+      
+      console.log(fields);
+      setIsUploading(true);
+      try {
+        const response = await axios.post(
+          "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/edit_product",
+          fields
+        );
+
+        if (response.status === 200) {
+          console.log("Uploading done");
+          setUploadMessageCurrent(uploadMessageSuccess);
+          setShowUploadStatus(true);
+        } else {
+          console.log("Data saving failed");
+          setUploadMessageCurrent(uploadMessageError);
+          setShowUploadStatus(true);
+        }
+       
+      } catch (err) {
+        console.log("amar log " + err);console.log("Data saving failed");
+        setUploadMessageCurrent(uploadMessageError);
+        setShowUploadStatus(true);
+        
+      
+      }
+       setIsUploading(false);
+      
+    }
+    else
+    {
+      console.log("Filed is incomplete");
+    }
+    
   };
 
   useEffect(() => {
     console.log("form values " + JSON.stringify(fields));
+    setIsFormFilled( isFormValid())
   }, [fields]);
 
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">
+      <ModalDialog
+        dialogText={uploadMessageCurrent.Title}
+        dialogSubtext={uploadMessageCurrent.Description}
+        btnText={uploadMessageCurrent.ButtonText}
+        doOpen={showUploadStatus}
+        closeCallback={UploadMsgOnClose}
+      />
       <DashPageHeader
         icon={<PlusCircleIcon className="h-8 w-8" />}
         text="Add Product"
@@ -140,18 +211,29 @@ const AddProduct = () => {
 
           <section className="flex px-6 pb-6 gap-4 w-full items-center justify-center">
             <button
-              disabled={false}
+              disabled={isUploading || isFormFilled === false}
               onClick={handleSubmit}
+              type="Submit"
               className="flex p-4 gap-4 items-center justify-center w-full rounded-xl hover:shadow-lg disabled:shadow-none font-semibold text-lg text-white bg-green-500 hover:bg-green-700 disabled:bg-green-500/40 transition-all"
             >
-              <span>
-                <CloudArrowUpIcon className="h-6 w-6" />
-              </span>
-              <span>Upload Product</span>
-              
+              {isUploading && (
+                <>
+                  <LoadingIndicator />
+                  <span>Uploading...</span>
+                </>
+              )}
+
+              {!isUploading && (
+                <>
+                  <span>
+                    <CloudArrowUpIcon className="h-6 w-6" />
+                  </span>
+                  <span>Upload Product</span>
+                </>
+              )}
             </button>
             <button
-              disabled={true}
+              disabled={isUploading}
               className="flex p-4 gap-4 items-center justify-center w-full rounded-xl hover:shadow-lg disabled:shadow-none font-semibold text-lg text-white bg-red-500 hover:bg-red-700 disabled:bg-red-500/40 transition-all"
             >
               <span>

@@ -177,6 +177,7 @@ export function FileUploadCard({
 }) {
   const [file, setFile] = useState(null);
   const [isTypeError, setTypeError] = useState(false);
+  const [isUploadError, setUploadError] = useState(false);
   const [isInDropZone, setIsInDropZone] = useState(false);
   const [uploadPercent, setUploadPercent] = useState(0);
 
@@ -225,25 +226,40 @@ export function FileUploadCard({
     console.log(response.data);
     console.log("the file going to be uploaded ");
 
+    
     console.log(file);
     // Upload file to S3 using signed URL
-    await axios.put(upload_url, file, options);
-    if (fileTypes[0] == "glb" || fileTypes[0] == "usdz") {
-      handleFile(
-        fileType[0],
-        `https://${bucketName}.s3.amazonaws.com/${file_key}`
-      );
-    } else {
-      handleFile(
-        "poster",
-        `https://${bucketName}.s3.amazonaws.com/${file_key}`
-      );
-    }
+    const responseUpload = await axios.put(upload_url, file, options); //Check for error - Modal + Make field blank 
+    console.log("response " + JSON.stringify(responseUpload) )
+    console.log("response text " + responseUpload.statusText)
+    
 
-    fileSelectedCallback(
-      `https://${bucketName}.s3.amazonaws.com/${file_key}`,
-      fileTypes
-    );
+    if(responseUpload.statusText === "OK")  
+    {
+      if (fileTypes[0] == "glb" || fileTypes[0] == "usdz") {
+        handleFile(
+          fileType[0],
+          `https://${bucketName}.s3.amazonaws.com/${file_key}`
+        );
+      } else {
+        handleFile(
+          "poster",
+          `https://${bucketName}.s3.amazonaws.com/${file_key}`
+        );
+      }
+  
+      fileSelectedCallback(
+        `https://${bucketName}.s3.amazonaws.com/${file_key}`,
+        fileTypes
+      );
+
+      setUploadError(false);
+    }
+    else
+    {
+      setUploadError(true);
+    }
+    
   };
 
   return (
@@ -268,7 +284,7 @@ export function FileUploadCard({
         <button
           className={`hidden lg:flex flex-col p-4 gap-6 w-full h-full items-center justify-center rounded-2xl border-2 border-tif-lavender border-dashed hover:bg-tif-blue/20 hover:shadow-md transition-all ${
             isInDropZone ? "bg-tif-blue/20 shadow-md" : ""
-          } ${isTypeError ? "bg-red-100" : ""} ${file ? "bg-green-100" : ""}`}
+          } ${isTypeError || isUploadError ? "bg-red-100" : ""} ${file && !isUploadError ? "bg-green-100" : ""}`}
         >
           <div
             className={`flex items-center justify-center px-4 py-2 gap-4 text-white bg-gradient-to-br from-tif-blue to-tif-pink rounded-xl shadow-md ${
@@ -281,7 +297,7 @@ export function FileUploadCard({
           <h1
             className={`font-semibold  text-sm text-center text-tif-lavender leading-snug ${
               isInDropZone ? "blur" : "blur-none"
-            } ${isTypeError ? "hidden" : ""} ${file ? "hidden" : ""}`}
+            } ${isTypeError || isUploadError ? "hidden" : ""} ${file ? "hidden" : ""}`}
           >
             Drag & Drop
             <br />
@@ -292,7 +308,7 @@ export function FileUploadCard({
           <ProgressBar progressPercent={uploadPercent} doShow={uploadPercent > 0 && uploadPercent < 100}/>
           <h1
             className={`px-2 w-full font-semibold text-tif-lavender truncate ${
-              file ? "" : "hidden"
+              file && !isUploadError ? "" : "hidden"
             }`}
           >
             {file ? file.name : ""}
@@ -316,6 +332,14 @@ export function FileUploadCard({
                   : "")
             )}{" "}
             file
+          </h1>
+
+          <h1
+            className={`font-medium text-red-500 ${
+              isUploadError ? "flex" : "hidden"
+            }`}
+          >
+            Upload Failed! Please try again!            
           </h1>
         </button>
 

@@ -60,6 +60,7 @@ const ProductUploadCard_About = ({ brandList , handleChange , handleDropdown }) 
           fieldName="productName"
           fieldType="text"
           fieldLabel="Product Name"
+          isRequired="true"
           handleChange={handleChange}
         />
         <ProductUploadFormField
