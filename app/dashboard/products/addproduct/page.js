@@ -107,7 +107,7 @@ const AddProduct = () => {
       setIsUploading(true);
       try {
         const response = await axios.post(
-          "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/edit_product",
+          "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/add_product",
           fields
         );
 
