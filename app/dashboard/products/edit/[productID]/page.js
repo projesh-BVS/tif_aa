@@ -75,8 +75,8 @@ const EditProduct = ({ params }) => {
     weight: "",
     weightUnit: "",
     materials: "default",
-    pHeight: "",
-    pWidth: "",
+    height: "",
+    width: "",
     productLength: "",
     dimensionUnit: "",
     glb: "",
@@ -84,17 +84,15 @@ const EditProduct = ({ params }) => {
     poster: "",
   });
 
- 
-
   const isFormValid = () => {
     return Object.values(fields).every((value) => value || value === 0); //We accept 0 as valid number input
   };
 
-   function SetProductData( product ) {
-     //Set fields
-     console.log(JSON.stringify(product.data));
-     setFields(JSON.parse(JSON.stringify(product.data)));
-   }
+  function SetProductData(product) {
+    //Set fields
+    console.log(JSON.stringify(product.data));
+    setFields(JSON.parse(JSON.stringify(product.data)));
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -104,7 +102,7 @@ const EditProduct = ({ params }) => {
 
   async function handleDropdown(name, value) {
     // Do something with name and value
-    //console.log("name " + name + " value " + value);
+    console.log("drop own updated name " + name + " value " + value);
     //setFields({ ...fields, [name]: value });
 
     setFields((prevFields) => ({
@@ -154,7 +152,7 @@ const EditProduct = ({ params }) => {
 
   useEffect(() => {
     console.log("form values " + JSON.stringify(fields));
-   setIsFormFilled(isFormValid());
+    setIsFormFilled(isFormValid());
   }, [fields]);
 
   return (
@@ -209,10 +207,14 @@ const EditProduct = ({ params }) => {
         !isOwnerError &&
         product &&
         product.data != null &&
-        !isProductError && (
+        !isProductError &&
+        fields.brandID != "" && (
           <form className="flex flex-col gap-6 items-center w-full h-full overflow-auto -mt-6">
             <section className="flex px-6 gap-4 w-full items-center justify-center">
-              <ProductUploadCard_Model handleFile={handleFile} fieldsData={fields} />
+              <ProductUploadCard_Model
+                handleFile={handleFile}
+                fieldsData={fields}
+              />
             </section>
 
             <section className="flex px-6 gap-4 w-full items-center justify-center">
@@ -220,6 +222,7 @@ const EditProduct = ({ params }) => {
                 brandList={owner.brandList}
                 handleChange={handleChange}
                 handleDropdown={handleDropdown}
+                fieldsData={fields}
               />
             </section>
 
@@ -227,6 +230,7 @@ const EditProduct = ({ params }) => {
               <ProductUploadCard_Dimensions
                 handleChange={handleChange}
                 handleDropdown={handleDropdown}
+                fieldsData={fields}
               />
             </section>
 
@@ -234,6 +238,7 @@ const EditProduct = ({ params }) => {
               <ProductUploadCard_Pricing
                 handleChange={handleChange}
                 handleDropdown={handleDropdown}
+                fieldsData={fields}
               />
             </section>
 

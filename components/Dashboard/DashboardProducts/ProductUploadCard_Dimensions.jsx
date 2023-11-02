@@ -3,23 +3,32 @@ import { useState, useEffect } from "react";
 import ProductUploadFormField from "./SubComps/ProductUploadFormField";
 import ProductUploadFormListbox from "./SubComps/ProductUploadFormListbox";
 import { CubeIcon } from "@heroicons/react/24/solid";
-import { getDimensionUnits, getWeightUnits } from "@/utils/productUnitsUtils";
+import { GetDataDimensionIndex, GetDataWeightIndex, getDimensionUnits, getWeightUnits } from "@/utils/productUnitsUtils";
 
 const dimensionUnits = getDimensionUnits();
 const weightUnits = getWeightUnits();
 
-const ProductUploadCard_Dimensions = ({handleChange , handleDropdown}) => {
-  const [selectedDimUnit, setSelectedDimUnit] = useState(dimensionUnits[0]);
-  const [selectedWtUnit, setSelectedWtUnit] = useState(weightUnits[0]);
+const ProductUploadCard_Dimensions = ({
+  handleChange,
+  handleDropdown,
+  fieldsData=null,
+}) => {
+  const [selectedDimUnit, setSelectedDimUnit] = useState(
+    fieldsData === null
+      ? dimensionUnits[0]
+       //: dimensionUnits[0]
+      : dimensionUnits[GetDataDimensionIndex(fieldsData.dimensionUnit)]
+  );
+  const [selectedWtUnit, setSelectedWtUnit] = useState(
+    fieldsData === null ? weightUnits[0] : weightUnits[GetDataWeightIndex(fieldsData.weightUnit)]
+  );
 
   useEffect(() => {
-  
-    handleDropdown("dimensionUnit",selectedDimUnit.display)
+    handleDropdown("dimensionUnit", selectedDimUnit.apiVal);
   }, [selectedDimUnit]);
 
   useEffect(() => {
-  
-    handleDropdown("weightUnit",selectedWtUnit.display)
+    handleDropdown("weightUnit", selectedWtUnit.apiVal);
   }, [selectedWtUnit]);
 
   return (
@@ -34,7 +43,7 @@ const ProductUploadCard_Dimensions = ({handleChange , handleDropdown}) => {
             labelText="LxWxH Unit"
             optionsArray={dimensionUnits}
             onOptionSelect={setSelectedDimUnit}
-           
+            initialSelected={selectedDimUnit}
           />
         </div>
         <div className="col-span-full md:col-span-1">
@@ -42,6 +51,7 @@ const ProductUploadCard_Dimensions = ({handleChange , handleDropdown}) => {
             labelText="Wt Unit"
             optionsArray={weightUnits}
             onOptionSelect={setSelectedWtUnit}
+            initialSelected={selectedWtUnit}
           />
         </div>
         <ProductUploadFormField
@@ -49,6 +59,7 @@ const ProductUploadCard_Dimensions = ({handleChange , handleDropdown}) => {
           fieldName="productLength"
           fieldType="number"
           fieldLabel="Length"
+          fieldValue={fieldsData === null ? "" : fieldsData.productLength}
           handleChange={handleChange}
         />
         <ProductUploadFormField
@@ -56,6 +67,7 @@ const ProductUploadCard_Dimensions = ({handleChange , handleDropdown}) => {
           fieldName="width"
           fieldType="number"
           fieldLabel="Width"
+          fieldValue={fieldsData === null ? "" : fieldsData.width}
           handleChange={handleChange}
         />
         <ProductUploadFormField
@@ -63,6 +75,7 @@ const ProductUploadCard_Dimensions = ({handleChange , handleDropdown}) => {
           fieldName="height"
           fieldType="number"
           fieldLabel="Height"
+          fieldValue={fieldsData === null ? "" : fieldsData.height}
           handleChange={handleChange}
         />
         <ProductUploadFormField
@@ -70,6 +83,7 @@ const ProductUploadCard_Dimensions = ({handleChange , handleDropdown}) => {
           fieldName="weight"
           fieldType="number"
           fieldLabel="Weight"
+          fieldValue={fieldsData === null ? "" : fieldsData.weight}
           handleChange={handleChange}
         />
       </div>

@@ -9,43 +9,62 @@ const ProductUploadFormListbox = ({
   onOptionSelect,
   showBelow = true,
   isDependant = false,
-}) => {  
-  
-  const [selectedOption, setSelectedOption] = useState(optionsArray[0]); //This selected option is set after render 
+  initialSelected = null,
+}) => {
+  console.log(
+    "Initial data in list box " +
+      labelText +
+      " - " +
+      JSON.stringify(initialSelected)
+  );
+  const [selectedOption, setSelectedOption] = useState(
+    initialSelected === null ? optionsArray[0] : initialSelected
+  ); //This selected option is set after render
   const [options, setOptions] = useState(optionsArray);
 
-useEffect(() => {
-  
-  setOptions(optionsArray)
-  
-  
-}, [optionsArray[0].display]);
+  useEffect(() => {
+    setOptions(optionsArray);
+  }, [optionsArray[0].display]);
 
-useEffect(() => {
-  if(isDependant)
-  {   
-    //console.log("options reset") ;
-    setSelectedOption(options[0])
-    handleOnChange(options[0])
-  }  
-  
-}, [options]);
-
+  useEffect(() => {
+    if (isDependant) {
+      //When brand is swtiFirst category of the brand is not selected when editing
+      console.log(
+        "options reset and initialSelected Is " +
+          JSON.stringify(initialSelected)
+      );
+      console.log(
+        "OPTIONS ARRAY INCLUDES INITIAL - " +
+          DoesInitialExist(optionsArray, initialSelected)
+      );
+      setSelectedOption(DoesInitialExist(optionsArray, initialSelected) ? initialSelected : options[0]);
+      handleOnChange(
+        DoesInitialExist(optionsArray, initialSelected)
+          ? initialSelected
+          : options[0]
+      );
+    }
+    /*else if(isDependant && initialSelected != null) {
+      setSelectedOption(initialSelected);
+      handleOnChange(initialSelected);
+    }*/
+  }, [options]);
 
   function handleOnChange(option) {
     setSelectedOption(option);
-    
+
     onOptionSelect(option);
-    //console.log(labelText + " | Option changed to on click: " + option.display);
+    console.log(labelText + " | Option changed to on click: " + option.display);
   }
 
-
   useEffect(() => {
-    handleOnChange(optionsArray[0])
-    
+    if (initialSelected === null) {
+      handleOnChange(optionsArray[0]); //Issue in edit page auto update to 0
+    }
   }, []);
 
   return (
+    //<Listbox value={isDependant ? (options.includes(selectedOption) ? selectedOption : options[0]) : selectedOption} by="id" onChange={handleOnChange}>
     <Listbox value={selectedOption} by="id" onChange={handleOnChange}>
       <div className="relative">
         <div className="relative">
@@ -94,8 +113,8 @@ useEffect(() => {
             className={`${
               showBelow ? "top-full mt-2" : "bottom-full mb-2"
             } absolute py-1 px-1 z-20 max-h-60 w-full overflow-auto rounded-lg bg-tif-grey border-2 border-tif-blue text-sm lg:text-base shadow-md ring-1 ring-black/5 focus:outline-none`}
-          >            
-            {optionsArray.map((option) => (              
+          >
+            {optionsArray.map((option) => (
               <Listbox.Option
                 key={option.id}
                 value={option}
@@ -111,8 +130,8 @@ useEffect(() => {
                       className={`block truncate ${
                         selected ? "font-medium" : "font-normal"
                       }`}
-                    >                      
-                      { option.display}
+                    >
+                      {option.display}
                     </span>
                     {selected ? (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-tif-white">
@@ -134,3 +153,14 @@ useEffect(() => {
 };
 
 export default ProductUploadFormListbox;
+
+
+export function DoesInitialExist (optionsList, initialOption) {
+  for (let i = 0; i < optionsList.length; i++) {
+    if(optionsList[i].display === initialOption.display)
+    {
+      return true;
+    }    
+  }
+  return false;
+}

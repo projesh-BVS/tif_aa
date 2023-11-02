@@ -8,7 +8,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-const ProductUploadCard_Model = ({ handleFile, fieldsData }) => {
+const ProductUploadCard_Model = ({ handleFile, fieldsData = null }) => {  
   useEffect(() => {
     // This is where we will initialize Model Viewer.
     // We'll do this asynchronously because it's a heavy operation.
@@ -26,6 +26,14 @@ const ProductUploadCard_Model = ({ handleFile, fieldsData }) => {
   const [glbFile, setGLBFile] = useState(null);
   const [usdzFile, setUSDZFile] = useState(null);
   const [posterFile, setPosterFile] = useState(null);
+
+    useEffect(() => {
+      if(fieldsData != null) {
+        setGLBFile(fieldsData.glb);
+        setUSDZFile(fieldsData.usdz);
+        setPosterFile(fieldsData.poster);
+      }
+    }, [fieldsData])
 
   const fileSelected = (file, fileType) => {
     console.log("FILE SELECTED" + file);
@@ -173,7 +181,7 @@ export function FileUploadCard({
   displayName,
   fileTypes,
   fileSelectedCallback,
-  handleFile,  
+  handleFile,
 }) {
   const [file, setFile] = useState(null);
   const [isTypeError, setTypeError] = useState(false);
@@ -197,7 +205,12 @@ export function FileUploadCard({
     setIsInDropZone(dragging);
   };
 
-  const handleUpload = async (bucketName, file, fileType, precentageCallback) => {
+  const handleUpload = async (
+    bucketName,
+    file,
+    fileType,
+    precentageCallback
+  ) => {
     const options = {
       onUploadProgress: (progressEvent) => {
         const { loaded, total } = progressEvent;
@@ -210,7 +223,7 @@ export function FileUploadCard({
         if (precentage < 100) {
           console.log(precentage);
         }
-      }
+      },
     };
     // Get signed URL from your backend
     const response = await axios.get(
@@ -226,16 +239,13 @@ export function FileUploadCard({
     console.log(response.data);
     console.log("the file going to be uploaded ");
 
-    
     console.log(file);
     // Upload file to S3 using signed URL
-    const responseUpload = await axios.put(upload_url, file, options); //Check for error - Modal + Make field blank 
-    console.log("response " + JSON.stringify(responseUpload) )
-    console.log("response text " + responseUpload.statusText)
-    
+    const responseUpload = await axios.put(upload_url, file, options); //Check for error - Modal + Make field blank
+    console.log("response " + JSON.stringify(responseUpload));
+    console.log("response text " + responseUpload.statusText);
 
-    if(responseUpload.statusText === "OK")  
-    {
+    if (responseUpload.statusText === "OK") {
       if (fileTypes[0] == "glb" || fileTypes[0] == "usdz") {
         handleFile(
           fileType[0],
@@ -247,19 +257,16 @@ export function FileUploadCard({
           `https://${bucketName}.s3.amazonaws.com/${file_key}`
         );
       }
-  
+
       fileSelectedCallback(
         `https://${bucketName}.s3.amazonaws.com/${file_key}`,
         fileTypes
       );
 
       setUploadError(false);
-    }
-    else
-    {
+    } else {
       setUploadError(true);
     }
-    
   };
 
   return (
@@ -284,7 +291,9 @@ export function FileUploadCard({
         <button
           className={`hidden lg:flex flex-col p-4 gap-6 w-full h-full items-center justify-center rounded-2xl border-2 border-tif-lavender border-dashed hover:bg-tif-blue/20 hover:shadow-md transition-all ${
             isInDropZone ? "bg-tif-blue/20 shadow-md" : ""
-          } ${isTypeError || isUploadError ? "bg-red-100" : ""} ${file && !isUploadError ? "bg-green-100" : ""}`}
+          } ${isTypeError || isUploadError ? "bg-red-100" : ""} ${
+            file && !isUploadError ? "bg-green-100" : ""
+          }`}
         >
           <div
             className={`flex items-center justify-center px-4 py-2 gap-4 text-white bg-gradient-to-br from-tif-blue to-tif-pink rounded-xl shadow-md ${
@@ -297,7 +306,9 @@ export function FileUploadCard({
           <h1
             className={`font-semibold  text-sm text-center text-tif-lavender leading-snug ${
               isInDropZone ? "blur" : "blur-none"
-            } ${isTypeError || isUploadError ? "hidden" : ""} ${file ? "hidden" : ""}`}
+            } ${isTypeError || isUploadError ? "hidden" : ""} ${
+              file ? "hidden" : ""
+            }`}
           >
             Drag & Drop
             <br />
@@ -305,7 +316,10 @@ export function FileUploadCard({
             <br />
             Click To Upload File
           </h1>
-          <ProgressBar progressPercent={uploadPercent} doShow={uploadPercent > 0 && uploadPercent < 100}/>
+          <ProgressBar
+            progressPercent={uploadPercent}
+            doShow={uploadPercent > 0 && uploadPercent < 100}
+          />
           <h1
             className={`px-2 w-full font-semibold text-tif-lavender truncate ${
               file && !isUploadError ? "" : "hidden"
@@ -339,7 +353,7 @@ export function FileUploadCard({
               isUploadError ? "flex" : "hidden"
             }`}
           >
-            Upload Failed! Please try again!            
+            Upload Failed! Please try again!
           </h1>
         </button>
 
@@ -361,13 +375,18 @@ export function FileUploadCard({
   );
 }
 
-export function ProgressBar({progressPercent = 0, doShow}) {
+export function ProgressBar({ progressPercent = 0, doShow }) {
   return (
-    <div className={`w-full bg-gray-200 rounded-full dark:bg-gray-700 ${(doShow) ? "" : "hidden"}`}>
-      <div className={`bg-tif-lavender text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full`} style={{width: `${progressPercent}%`}}>
-        <h1 className="w-full truncate">
-          {progressPercent + "%"}
-        </h1>
+    <div
+      className={`w-full bg-gray-200 rounded-full dark:bg-gray-700 ${
+        doShow ? "" : "hidden"
+      }`}
+    >
+      <div
+        className={`bg-tif-lavender text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full`}
+        style={{ width: `${progressPercent}%` }}
+      >
+        <h1 className="w-full truncate">{progressPercent + "%"}</h1>
       </div>
     </div>
   );
