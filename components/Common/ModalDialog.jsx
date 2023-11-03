@@ -4,9 +4,11 @@ import { Fragment, useEffect, useState } from "react";
 const ModalDialog = ({
   dialogText,
   dialogSubtext,
-  btnText,
+  confirmBtnText,
+  closeBtnText,
   doOpen,
   closeCallback = null,
+  toProductsCallback = null
 }) => {
   let [isOpen, setIsOpen] = useState(doOpen);
 
@@ -62,14 +64,26 @@ const ModalDialog = ({
                     <p className="text-sm text-gray-500">{dialogSubtext}</p>
                   </div>
 
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      {btnText}
-                    </button>
+                  <div className="flex px-6 pb-6 gap-4 w-full items-center justify-center">
+                    <div className="mt-4">
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={toProductsCallback}
+                      >
+                        {confirmBtnText}
+                      </button>
+                    </div>
+
+                    <div className="mt-4">
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={closeModal}
+                      >
+                        {closeBtnText}
+                      </button>
+                    </div>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

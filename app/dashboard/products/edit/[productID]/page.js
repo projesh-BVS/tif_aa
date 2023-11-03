@@ -195,8 +195,9 @@ const EditProduct = ({ params }) => {
 
         if (response.status === 200) {
           setUploadMessageCurrent(deleteMessageSuccess);
-          setShowDeleteConfirmation(false);
+          //setShowDeleteConfirmation(false);
           setShowUploadStatus(true);
+          console.log("Modal status " + showUploadStatus);
         } else {
           setUploadMessageCurrent(deleteMessageError);
           setShowDeleteConfirmation(false);
@@ -230,9 +231,11 @@ const EditProduct = ({ params }) => {
       <ModalDialog
         dialogText={uploadMessageCurrent.Title}
         dialogSubtext={uploadMessageCurrent.Description}
-        btnText={uploadMessageCurrent.ButtonText}
+        confirmBtnText={"To Products"}
+        closeBtnText={uploadMessageCurrent.ButtonText}
         doOpen={showUploadStatus}
         closeCallback={UploadMsgOnClose}
+        toProductsCallback={handleDiscard}
       />
       <DashPageHeader
         icon={<PencilSquareIcon className="h-8 w-8" />}

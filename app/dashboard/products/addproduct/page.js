@@ -142,9 +142,11 @@ const AddProduct = () => {
       <ModalDialog
         dialogText={uploadMessageCurrent.Title}
         dialogSubtext={uploadMessageCurrent.Description}
-        btnText={uploadMessageCurrent.ButtonText}
+        confirmBtnText={"To Products"}
+        closeBtnText={uploadMessageCurrent.ButtonText}
         doOpen={showUploadStatus}
         closeCallback={UploadMsgOnClose}
+        toProductsCallback={handleDiscard}
       />
       <DashPageHeader
         icon={<PlusCircleIcon className="h-8 w-8" />}
