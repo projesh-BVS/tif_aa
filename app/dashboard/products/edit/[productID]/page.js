@@ -16,6 +16,7 @@ import {
 } from "@heroicons/react/24/solid";
 import LoadingIndicator from "@/components/Common/LoadingIndicator";
 import ModalDialog from "@/components/Common/ModalDialog";
+import ModalDialogConfirm from "@/components/Common/ModalDialogConfirm";
 import useProduct from "@/hooks/useProduct";
 
 const EditProduct = ({ params }) => {
@@ -37,6 +38,7 @@ const EditProduct = ({ params }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [showUploadStatus, setShowUploadStatus] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const uploadMessageSuccess = {
     Title: "Product Upload Successful",
@@ -49,11 +51,31 @@ const EditProduct = ({ params }) => {
     ButtonText: "Close",
   };
 
+  const deleteMessageError = {
+    Title: "Product Delete Failed",
+    Description: "Please try again.",
+    ButtonText: "Close",
+  };
+
+  const deleteMessageSuccess = {
+    Title: "Product Delete Success",
+    Description: "Your product was deleted succesfully.",
+    ButtonText: "Close",
+  };
+
+  const deleteMessagePromt = {
+    Title: "Delete confirmation!",
+    Description: "Do you want yo delete this product?",
+    YesButtonText: "Yes",
+    CloseButtonText: "Close",
+  };
+
   const [uploadMessageCurrent, setUploadMessageCurrent] =
     useState(uploadMessageError);
 
   function UploadMsgOnClose() {
     setShowUploadStatus(false);
+    setShowDeleteConfirmation(false);
     //router.push("/dashboard/products");
   }
 
@@ -121,7 +143,7 @@ const EditProduct = ({ params }) => {
     // Submit all data to your backend
     event.preventDefault();
     if (isFormValid()) {
-      //console.log(fields);
+      
       setIsUploading(true);
       try {
         const response = await axios.post(
@@ -130,24 +152,63 @@ const EditProduct = ({ params }) => {
         );
 
         if (response.status === 200) {
-          //console.log("Uploading done");
+         
           setUploadMessageCurrent(uploadMessageSuccess);
           setShowUploadStatus(true);
         } else {
-          //console.log("Data saving failed");
+          
           setUploadMessageCurrent(uploadMessageError);
           setShowUploadStatus(true);
         }
       } catch (err) {
-        //console.log("amar log " + err);
-        //console.log("Data saving failed");
+        
         setUploadMessageCurrent(uploadMessageError);
         setShowUploadStatus(true);
       }
       setIsUploading(false);
     } else {
-      //console.log("Filed is incomplete");
+      
     }
+  };
+
+  const promtDelete = (event)=>{
+      event.preventDefault();
+      setShowDeleteConfirmation(true);
+  }
+
+  const handleDelete = async (event) => {
+    // Submit all data to your backend
+    event.preventDefault();
+    
+      setIsUploading(true);
+      try {
+        const response = await axios.delete(
+          "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/product?glb=" +
+            fields.glb +
+            "&poster=" +
+            fields.poster +
+            "&usdz=" +
+            fields.usdz +
+            "&productID=" +
+            fields.productID
+        );
+
+        if (response.status === 200) {
+          setUploadMessageCurrent(deleteMessageSuccess);
+          setShowDeleteConfirmation(false);
+          setShowUploadStatus(true);
+        } else {
+          setUploadMessageCurrent(deleteMessageError);
+          setShowDeleteConfirmation(false);
+          setShowUploadStatus(true);
+        }
+      } catch (err) {
+        setUploadMessageCurrent(deleteMessageError);
+        setShowDeleteConfirmation(false);
+        setShowUploadStatus(true);
+      }
+      setIsUploading(false);
+   
   };
 
   useEffect(() => {
@@ -157,6 +218,15 @@ const EditProduct = ({ params }) => {
 
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">
+      <ModalDialogConfirm
+        dialogText={deleteMessagePromt.Title}
+        dialogSubtext={deleteMessagePromt.Description}
+        closeBtnText={deleteMessagePromt.CloseButtonText}
+        confirmBtnText={deleteMessagePromt.YesButtonText}
+        doOpen={showDeleteConfirmation}
+        closeCallback={UploadMsgOnClose}
+        confirmCallback={handleDelete}
+      />
       <ModalDialog
         dialogText={uploadMessageCurrent.Title}
         dialogSubtext={uploadMessageCurrent.Description}
@@ -267,13 +337,13 @@ const EditProduct = ({ params }) => {
               </button>
               <button
                 disabled={isUploading}
-                onClick={handleDiscard}
+                onClick={promtDelete}
                 className="flex p-4 gap-4 items-center justify-center w-full rounded-xl hover:shadow-lg disabled:shadow-none font-semibold text-lg text-white bg-red-500 hover:bg-red-700 disabled:bg-red-500/40 transition-all"
               >
                 <span>
                   <TrashIcon className="h-6 w-6" />
                 </span>
-                <span>Discard</span>
+                <span>Delete</span>
               </button>
             </section>
           </form>
