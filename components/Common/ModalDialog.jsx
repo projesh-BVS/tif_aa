@@ -8,13 +8,14 @@ const ModalDialog = ({
   closeBtnText,
   doOpen,
   closeCallback = null,
-  toProductsCallback = null
+  toProductsCallback = null,
+  productDeleted=false,
 }) => {
   let [isOpen, setIsOpen] = useState(doOpen);
 
   function closeModal() {
     setIsOpen(false);
-    if(closeCallback != null) closeCallback();
+    if (closeCallback != null) closeCallback();
   }
 
   function openModal() {
@@ -39,7 +40,7 @@ const ModalDialog = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/25" />
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -53,37 +54,35 @@ const ModalDialog = ({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    {dialogText}
-                  </Dialog.Title>
-                  <div className={`mt-2 ${dialogSubtext ? "" : "hidden"}`}>
-                    <p className="text-sm text-gray-500">{dialogSubtext}</p>
+                <Dialog.Panel className="flex flex-col p-4 gap-4 w-full max-w-md transform overflow-hidden rounded-xl bg-white text-left align-middle shadow-xl shadow-2xl transition-all">
+                  <div className="flex flex-col justify-between">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-gray-900"
+                    >
+                      {dialogText}
+                    </Dialog.Title>
+                    <div className={`mt-2 ${dialogSubtext ? "" : "hidden"}`}>
+                      <p className="text-sm text-gray-500">{dialogSubtext}</p>
+                    </div>
                   </div>
 
-                  <div className="flex px-6 pb-6 gap-4 w-full items-center justify-center">
-                    <div className="mt-4">
-                      <button
-                        type="button"
-                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        onClick={toProductsCallback}
-                      >
-                        {confirmBtnText}
-                      </button>
-                    </div>
+                  <div className="flex gap-4 w-full items-center justify-center">
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-center px-4 py-2 rounded-lg bg-tif-blue text-white font-semibold font-sm hover:bg-tif-lavender hover:shadow-md transition-all"
+                      onClick={toProductsCallback}
+                    >
+                      {confirmBtnText}
+                    </button>
 
-                    <div className="mt-4">
-                      <button
-                        type="button"
-                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        onClick={closeModal}
-                      >
-                        {closeBtnText}
-                      </button>
-                    </div>
+                    {!productDeleted&&<button
+                      type="button"
+                      className="flex w-full items-center justify-center px-4 py-2 rounded-lg bg-tif-blue text-white font-semibold font-sm hover:bg-tif-lavender hover:shadow-md transition-all"
+                      onClick={closeModal}
+                    >
+                      {closeBtnText}
+                    </button>}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

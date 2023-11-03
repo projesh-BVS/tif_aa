@@ -39,6 +39,7 @@ const EditProduct = ({ params }) => {
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [showUploadStatus, setShowUploadStatus] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [productDeleted, setProductDeleted] = useState(false);
 
   const uploadMessageSuccess = {
     Title: "Product Upload Successful",
@@ -197,6 +198,7 @@ const EditProduct = ({ params }) => {
           setUploadMessageCurrent(deleteMessageSuccess);
           //setShowDeleteConfirmation(false);
           setShowUploadStatus(true);
+          setProductDeleted(true);
           console.log("Modal status " + showUploadStatus);
         } else {
           setUploadMessageCurrent(deleteMessageError);
@@ -236,6 +238,7 @@ const EditProduct = ({ params }) => {
         doOpen={showUploadStatus}
         closeCallback={UploadMsgOnClose}
         toProductsCallback={handleDiscard}
+        productDeleted={productDeleted}
       />
       <DashPageHeader
         icon={<PencilSquareIcon className="h-8 w-8" />}
@@ -325,7 +328,7 @@ const EditProduct = ({ params }) => {
                 {isUploading && (
                   <>
                     <LoadingIndicator />
-                    <span>Uploading...</span>
+                    <span>Please Wait...</span>
                   </>
                 )}
 
@@ -343,10 +346,21 @@ const EditProduct = ({ params }) => {
                 onClick={promtDelete}
                 className="flex p-4 gap-4 items-center justify-center w-full rounded-xl hover:shadow-lg disabled:shadow-none font-semibold text-lg text-white bg-red-500 hover:bg-red-700 disabled:bg-red-500/40 transition-all"
               >
-                <span>
-                  <TrashIcon className="h-6 w-6" />
-                </span>
-                <span>Delete</span>
+                {isUploading && (
+                  <>
+                    <LoadingIndicator />
+                    <span>Please Wait...</span>
+                  </>
+                )}
+
+                {!isUploading && (
+                  <>
+                    <span>
+                      <TrashIcon className="h-6 w-6" />
+                    </span>
+                    <span>Delete</span>
+                  </>
+                )}
               </button>
             </section>
           </form>

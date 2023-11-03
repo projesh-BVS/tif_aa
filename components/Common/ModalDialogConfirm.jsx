@@ -1,4 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { TrashIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { Fragment, useEffect, useState } from "react";
 
 const ModalDialogConfirm = ({
@@ -39,7 +40,7 @@ const ModalDialogConfirm = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/25" />
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -53,36 +54,37 @@ const ModalDialogConfirm = ({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    {dialogText}
-                  </Dialog.Title>
-                  <div className={`mt-2 ${dialogSubtext ? "" : "hidden"}`}>
-                    <p className="text-sm text-gray-500">{dialogSubtext}</p>
+                <Dialog.Panel className="flex flex-col p-4 gap-4 w-full max-w-md transform overflow-hidden rounded-xl bg-white text-left align-middle shadow-xl shadow-2xl transition-all">
+                  <div className="flex flex-col justify-between">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-gray-900"
+                    >
+                      {dialogText}
+                    </Dialog.Title>
+                    <div className={`mt-2 ${dialogSubtext ? "" : "hidden"}`}>
+                      <p className="text-sm text-gray-500">{dialogSubtext}</p>
+                    </div>
                   </div>
-                  <div className="flex px-6 pb-6 gap-4 w-full items-center justify-center">
-                    <div className="mt-4">
-                      <button
-                        type="button"
-                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        onClick={confirmCallback}
-                      >
-                        {confirmBtnText}
-                      </button>
-                    </div>
 
-                    <div className="mt-4">
-                      <button
-                        type="button"
-                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        onClick={closeModal}
-                      >
-                        {closeBtnText}
-                      </button>
-                    </div>
+                  <div className="flex gap-4 w-full items-center justify-center">
+                    <button
+                      type="button"
+                      className="flex gap-6 w-full items-center justify-center px-4 py-2 rounded-lg bg-red-500 text-white font-semibold text-lg hover:bg-red-600 hover:shadow-md transition-all"
+                      onClick={confirmCallback}
+                    >
+                      <TrashIcon className="w-5 h-5"/>
+                      {confirmBtnText}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="flex gap-6 w-full items-center justify-center px-4 py-2 rounded-lg bg-green-500 text-white font-semibold text-lg hover:bg-green-600 hover:shadow-md transition-all"
+                      onClick={closeModal}
+                    >
+                      <XCircleIcon className="w-5 h-5"/>
+                      {closeBtnText}
+                    </button>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
