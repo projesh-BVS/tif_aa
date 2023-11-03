@@ -2,7 +2,7 @@
 import DashPageHeader from "@/components/Dashboard/DashPageHeader";
 import BrandList from "@/components/Dashboard/DashboardBrands/BrandList";
 import useOwner from "@/hooks/useOwner";
-import { BuildingStorefrontIcon } from "@heroicons/react/24/solid";
+import { BuildingOffice2Icon } from "@heroicons/react/24/solid";
 
 export default function Brands() {
   const { owner, isOwnerLoading, isOwnerError } = useOwner(1);
@@ -10,8 +10,8 @@ export default function Brands() {
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">
       <DashPageHeader
-        icon={<BuildingStorefrontIcon className="h-8 w-8" />}
-        text="Brands"
+        icon={<BuildingOffice2Icon className="h-8 w-8" />}
+        text="Companies"
         isLoading={isOwnerLoading}
         showBackBtn={true}
       />

@@ -67,7 +67,7 @@ const ProductUploadCard_About = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 p-2 lg:p-4 h-auto gap-4 w-full">
         {/* Brand Dropdown */}
         <ProductUploadFormListbox
-          labelText="Brand"
+          labelText="Company"
           optionsArray={formattedBrandList}
           onOptionSelect={setCurrSelectedBrand}
           //onOptionSelect={() => console.log("onOptionSelect for Brand called")}
