@@ -19,7 +19,7 @@ function ProductBrandSelector({ brands, selectedBrand, onChange }) {
           }}
         >
           <option value={-1} className="bg-white text-gray-500">
-            All Brands
+            All Companies
           </option>
           {brands.map((brand) => (
             <option

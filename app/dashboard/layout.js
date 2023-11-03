@@ -3,6 +3,7 @@ import DashSidebar, {
   DashSidebarItem,
 } from "@/components/Dashboard/DashSidebar";
 import {
+  BuildingOffice2Icon,
   BuildingStorefrontIcon,
   HomeIcon,
   ShoppingBagIcon,
@@ -24,9 +25,14 @@ export default function DashboardLayout({ children }) {
             page="/dashboard"
           />
           <DashSidebarItem
-            icon={<BuildingStorefrontIcon className="h-6 w-6" />}
-            text={"Brands"}
+            icon={<BuildingOffice2Icon className="h-6 w-6" />}
+            text={"Companies"}
             page="/dashboard/brands"
+          />
+          <DashSidebarItem
+            icon={<BuildingStorefrontIcon className="h-6 w-6" />}
+            text={"Outlets"}
+            page="/dashboard/locked"
           />
           <DashSidebarItem
             icon={<ShoppingBagIcon className="h-6 w-6" />}

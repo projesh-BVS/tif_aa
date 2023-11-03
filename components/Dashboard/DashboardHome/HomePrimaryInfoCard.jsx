@@ -1,5 +1,5 @@
 import {
-  BuildingStorefrontIcon,
+  BuildingOffice2Icon,  
   ShoppingBagIcon,
 } from "@heroicons/react/24/solid";
 import DashInfoItem from "../DashInfoItem";
@@ -50,8 +50,8 @@ const HomePrimaryInfoCard = ({ ownerData, isOwnerLoading, isOwnerError }) => {
       </div>
       <div className="flex flex-col md:flex-row gap-1 lg:gap-2 items-center justify-center md:justify-end w-full">
         <DashInfoItem
-          icon={<BuildingStorefrontIcon className="h-7 w-7 lg:h-8 lg:w-8" />}
-          text="Brands"
+          icon={<BuildingOffice2Icon className="h-7 w-7 lg:h-8 lg:w-8" />}
+          text="Companies"
           page="/dashboard/brands"
           count={GetBrandCount((ownerData = { ownerData }))}
         />

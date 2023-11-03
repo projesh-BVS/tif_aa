@@ -47,3 +47,40 @@ export function getWeightUnits() {
 export function getCurrencyUnits() {
   return currCodes;
 }
+
+export function GetDataCurrencyIndex(dataCurrencyApiVal) {
+  for (let index = 0; index < currCodes.length; index++) {
+    if (currCodes[index].apiVal === dataCurrencyApiVal) {
+      return index;
+    }
+  }
+  return null;
+}
+
+export function GetDataWeightIndex(dataWeightApiVal) {
+  for (let index = 0; index < weightUnits.length; index++) {
+    if (weightUnits[index].apiVal === dataWeightApiVal) {
+      return index;
+    }
+  }
+  return null;
+}
+
+
+export function GetDataDimensionIndex(dataDimensionApiVal) {
+  for (let index = 0; index < dimensionUnits.length; index++) { 
+console.log(
+  "Checking Index Dimentions: " +
+    index +
+    " | formattedArray[index]: " +
+    dimensionUnits[index].apiVal  +
+    " " +
+    dataDimensionApiVal
+);
+    if (dimensionUnits[index].apiVal === dataDimensionApiVal) {
+      return index;
+    }
+  }
+  return null;
+}
+

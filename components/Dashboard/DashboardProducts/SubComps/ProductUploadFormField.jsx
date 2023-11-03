@@ -5,6 +5,8 @@ const ProductUploadFormField = ({
   fieldLabel,
   multiline = false,
   resizable = true,
+  fieldValue = "",
+  handleChange,
 }) => {
   if (multiline) {
     return (
@@ -13,6 +15,7 @@ const ProductUploadFormField = ({
           id={fieldID}
           name={fieldName}
           type={fieldType}
+          defaultValue={fieldValue}
           className={`
           ${resizable ? "resize-y" : "resize-none"}
                     peer
@@ -37,6 +40,7 @@ const ProductUploadFormField = ({
                     
                     transition-all`}
           placeholder={fieldLabel}
+          onChange={handleChange}
         />
         <label
           htmlFor={fieldID}
@@ -76,6 +80,7 @@ const ProductUploadFormField = ({
           id={fieldID}
           name={fieldName}
           type={fieldType}
+          defaultValue={fieldValue}
           className="
                     peer
                     h-11 w-full px-4
@@ -99,6 +104,7 @@ const ProductUploadFormField = ({
                     
                     transition-all"
           placeholder={fieldLabel}
+          onChange={handleChange}
         />
         <label
           htmlFor={fieldID}

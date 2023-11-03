@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+import Image from "next/image";
 import LoginWindow from "@/components/LoginWindow/LoginWindow";
 
 export default function Home() {
@@ -19,6 +20,12 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center justify-center gap-10 w-screen h-screen bg-tif-grey">
+      <Image
+        src="/Logos/TIF_Logo.svg"
+        alt="Try It First Logo"
+        width={150}
+        height={64}
+      />
       <LoginWindow />
       <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-gray-500">
         <span className="font-semibold lg:text-xl">
