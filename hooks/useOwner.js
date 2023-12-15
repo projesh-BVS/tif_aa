@@ -1,14 +1,19 @@
-import { fetcher_Owner } from '@/libs/fetcher'
-import useSWR from 'swr'
+import { fetcher_Owner } from "@/libs/fetcher";
+import useSWR from "swr";
 
 const useOwner = (id) => {
-  const {data, error, isLoading} = useSWR(id, fetcher_Owner)
+  const { data, mutate, error, isLoading, isValidating } = useSWR(
+    id,
+    fetcher_Owner
+  );
 
   return {
     owner: data,
+    ownerMutate: mutate,
     isOwnerLoading: isLoading,
-    isOwnerError: error
-  }
-}
+    isOwnerError: error,
+    isOwnerValidating: isValidating,
+  };
+};
 
-export default useOwner
+export default useOwner;

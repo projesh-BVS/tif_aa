@@ -4,28 +4,25 @@ import ProductUploadFormListbox from "./SubComps/ProductUploadFormListbox";
 import { useState, useEffect } from "react";
 
 const ProductUploadCard_About = ({
-  brandList,
+  companyList,
   handleChange,
   handleDropdown,
   fieldsData = null,
 }) => {
-  var formattedBrandList = GetFormattedBrands(brandList);
-  /*const [currSelectedBrand, setCurrSelectedBrand] = useState(
-    formattedBrandList[0]
+  var formattedCompanyList = GetFormattedCompanies(companyList);
+  /*const [currSelectedCompany, setCurrSelectedCompany] = useState(
+    formattedCompanyList[0]
   );*/
 
- 
-  const [currSelectedBrand, setCurrSelectedBrand] = useState(
+  const [currSelectedCompany, setCurrSelectedCompany] = useState(
     fieldsData === null
-      ? formattedBrandList[0]
-      : formattedBrandList[
-          GetDataBrandIndex(formattedBrandList, fieldsData.brandID)
+      ? formattedCompanyList[0]
+      : formattedCompanyList[
+          GetDataCompanyIndex(formattedCompanyList, fieldsData.companyID)
         ]
   );
 
- 
-
-  var formattedCategoryList = GetFormattedCategories(currSelectedBrand);
+  var formattedCategoryList = GetFormattedCategories(currSelectedCompany);
 
   const [currSelectedCategory, setCurrSelectedCategory] = useState(
     fieldsData === null
@@ -36,9 +33,9 @@ const ProductUploadCard_About = ({
   );
 
   useEffect(() => {
-    // console.log("Setting initial brand ")
-    handleDropdown("brandID", currSelectedBrand.id);
-  }, [currSelectedBrand]);
+    // console.log("Setting initial company ")
+    handleDropdown("companyID", currSelectedCompany.id);
+  }, [currSelectedCompany]);
 
   useEffect(() => {
     // console.log("Setting initial category ")
@@ -47,11 +44,11 @@ const ProductUploadCard_About = ({
 
   /*useEffect(() => {  
   if(fieldsData!= null){
-    //for brand
-    formattedBrandList.forEach(brand => {
-      if(brand.id == fieldsData.brandID)
+    //for company
+    formattedCompanyList.forEach(company => {
+      if(company.id == fieldsData.companyID)
       {
-        setCurrSelectedBrand(brand);
+        setCurrSelectedCompany(company);
       }
     });
     //for category
@@ -65,13 +62,13 @@ const ProductUploadCard_About = ({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 p-2 lg:p-4 h-auto gap-4 w-full">
-        {/* Brand Dropdown */}
+        {/* Company Dropdown */}
         <ProductUploadFormListbox
           labelText="Company"
-          optionsArray={formattedBrandList}
-          onOptionSelect={setCurrSelectedBrand}
-          //onOptionSelect={() => console.log("onOptionSelect for Brand called")}
-          initialSelected={currSelectedBrand}
+          optionsArray={formattedCompanyList}
+          onOptionSelect={setCurrSelectedCompany}
+          //onOptionSelect={() => console.log("onOptionSelect for Company called")}
+          initialSelected={currSelectedCompany}
         />
         {console.log("while rendering " + currSelectedCategory.display)}
 
@@ -118,30 +115,39 @@ const ProductUploadCard_About = ({
 
 export default ProductUploadCard_About;
 
-export function GetFormattedBrands(brandList) {
-  var formattedBrands = [];
+export function GetFormattedCompanies(companyList) {
+  var formattedCompanies = [];
 
-  formattedBrands = brandList.map((brand) => ({
-    id: brand.brandID,
-    display: brand.brandName,
-    apiVal: brand,
+  formattedCompanies = companyList.map((company) => ({
+    id: company.companyID,
+    display: company.companyName,
+    apiVal: company,
   }));
 
-  return formattedBrands;
+  return formattedCompanies;
 }
 
-export function GetFormattedCategories(brand, doLog = false) {
+export function GetFormattedCategories(company, doLog = false) {
+  const defaultCat = {
+    id: company.apiVal.companyID.toString() + "All",
+    display: "Not Defined",
+    apiVal: ["None"],
+  };
   var formattedCategories = [];
   formattedCategories.length = 0;
-  var brandID = brand.apiVal.brandID;
-  formattedCategories = brand.apiVal.categories.map((category, index) => ({
-    id: brandID.toString() + index.toString(),
+  var companyID = company.apiVal.companyID;
+  formattedCategories = company.apiVal.categories.map((category, index) => ({
+    id: companyID.toString() + index.toString(),
     display: Object.keys(category).toString(),
     apiVal: category,
   }));
 
+  formattedCategories.splice(0, 0, defaultCat);
+
   if (doLog) {
-    console.log("---------GetFormattedCategory(" + brand.display + ")-------");
+    console.log(
+      "---------GetFormattedCategory(" + company.display + ")-------"
+    );
     for (let i = 0; i < formattedCategories.length; i++) {
       console.log("Index: " + i + " | " + formattedCategories[i].display);
     }
@@ -151,26 +157,22 @@ export function GetFormattedCategories(brand, doLog = false) {
   return formattedCategories;
 }
 
-export function GetDataBrandIndex(formattedBrandArray, dataBrandID) {
-  
-  for (let index = 0; index < formattedBrandArray.length; index++) {
+export function GetDataCompanyIndex(formattedCompanyArray, dataCompanyID) {
+  for (let index = 0; index < formattedCompanyArray.length; index++) {
     // console.log(
     //   "Checking Index: " +
     //     index +
     //     " | formattedArray[index]: " +
-    //     formattedBrandArray[index].id
+    //     formattedCompanyArray[index].id
     // );
-    if (formattedBrandArray[index].id === dataBrandID) {
-     
+    if (formattedCompanyArray[index].id === dataCompanyID) {
       return index;
     }
   }
   return null;
 }
 
-
 export function GetDataCategoryIndex(formatttedCategoryArray, category) {
- 
   for (let index = 0; index < formatttedCategoryArray.length; index++) {
     console.log(
       "Checking Index: " +
@@ -185,5 +187,5 @@ export function GetDataCategoryIndex(formatttedCategoryArray, category) {
       return index;
     }
   }
-  return null;
+  return 0;
 }

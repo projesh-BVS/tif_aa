@@ -23,7 +23,7 @@ const ProductView = ({ params }) => {
 
       {isProductLoading && (
         <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-gray-500">
-          <span className="font-semibold lg:text-xl">Loading Brands</span>
+          <span className="font-semibold lg:text-xl">Loading Product</span>
           <span className="font-light text-xs lg:text-sm">Please wait</span>
         </section>
       )}

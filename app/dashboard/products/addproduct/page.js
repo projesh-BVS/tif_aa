@@ -48,10 +48,8 @@ const AddProduct = () => {
     router.push("/dashboard/products");
   };
 
-  
-
   const [fields, setFields] = useState({
-    brandID: "",
+    companyID: "",
     productID: 1698810128507,
     productName: "",
     description: "",
@@ -121,14 +119,14 @@ const AddProduct = () => {
           setShowUploadStatus(true);
         }
       } catch (err) {
-        console.log("amar log " + err);
+        console.log("Server Log " + err);
         console.log("Data saving failed");
         setUploadMessageCurrent(uploadMessageError);
         setShowUploadStatus(true);
       }
       setIsUploading(false);
     } else {
-      console.log("Filed is incomplete");
+      console.log("Field is incomplete");
     }
   };
 
@@ -191,7 +189,7 @@ const AddProduct = () => {
 
           <section className="flex px-6 gap-4 w-full items-center justify-center">
             <ProductUploadCard_About
-              brandList={owner.brandList}
+              companyList={owner.companyList}
               handleChange={handleChange}
               handleDropdown={handleDropdown}
             />

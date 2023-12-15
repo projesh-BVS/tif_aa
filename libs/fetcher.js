@@ -1,7 +1,7 @@
 const owner_baseURL =
-  "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/brandsofaowner?ownerID=";
-const brand_baseURL =
-  "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/catalogue_brand?brandID=";
+  "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/owner_companies?ownerID=";
+const company_baseURL =
+  "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/company?companyID=";
 const product_baseURL =
   "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/product?productID=";
 
@@ -11,22 +11,18 @@ export async function fetcher_Owner(ownerID) {
   return data;
 }
 
-export async function fetcher_Brand(brandID) {
-  const response = await fetch(brand_baseURL + brandID);
+export async function fetcher_Company(companyID) {
+  const response = await fetch(company_baseURL + companyID);
   const data = await response.json();
   return data;
 }
 
-export async function fetcher_AllBrands(brandList) {
-  const brandIDs = brandList.map((brand) => brand.brandID);
+export async function fetcher_AllCompanies(companyList) {
+  const companyIDs = companyList.map((company) => company.companyID);
   var fullData = [];
 
-  /*const response = await fetch(brand_baseURL + brandIDs[0])
-    const data = await response.json()
-    return data*/
-
-  for (let i = 0; i < brandIDs.length; i++) {
-    const response = await fetch(brand_baseURL + brandIDs[i]);
+  for (let i = 0; i < companyIDs.length; i++) {
+    const response = await fetch(company_baseURL + companyIDs[i]);
     const data = await response.json();
     fullData.push(data);
   }

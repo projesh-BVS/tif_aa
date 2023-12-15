@@ -1,8 +1,4 @@
-import {
-  fetcher_AllBrands,
-  fetcher_Brand,
-  fetcher_Owner,
-} from "@/libs/fetcher";
+import { fetcher_AllCompanies, fetcher_Owner } from "@/libs/fetcher";
 import useSWR from "swr";
 
 export function useAllProducts(ownerID) {
@@ -12,33 +8,36 @@ export function useAllProducts(ownerID) {
     isLoading: isOwnerLoading,
   } = useSWR(ownerID, fetcher_Owner);
   const {
-    data: allBrandData,
-    error: allBrandError,
-    isLoading: isBrandLoading,
-  } = useSWR(() => (ownerData ? ownerData.brandList : null), fetcher_AllBrands);
+    data: allCompaniesData,
+    error: allCompaniesError,
+    isLoading: isCompaniesLoading,
+  } = useSWR(
+    () => (ownerData ? ownerData.companyList : null),
+    fetcher_AllCompanies
+  );
 
-  const isLoading = isOwnerLoading || isBrandLoading;
+  const isLoading = isOwnerLoading || isCompaniesLoading;
   const isAllProductsError =
     ownerError ||
-    allBrandError ||
+    allCompaniesError ||
     (ownerData && ownerData.ownerDetails.length == 0) ||
-    (allBrandData && allBrandData.length == 0);
+    (allCompaniesData && allCompaniesData.length == 0);
 
   let allProducts = [];
-  let allBrands = [];
+  let allCompanies = [];
 
-  if (allBrandData) {
-    allBrands = ownerData.brandList;
+  if (allCompaniesData) {
+    allCompanies = ownerData.companyList;
 
-    for (let i = 0; i < allBrandData.length; i++) {
-      for (let j = 0; j < allBrandData[i].catalogue.length; j++) {
-        allProducts.push(allBrandData[i].catalogue[j]);
+    for (let i = 0; i < allCompaniesData.length; i++) {
+      for (let j = 0; j < allCompaniesData[i].catalogue.length; j++) {
+        allProducts.push(allCompaniesData[i].catalogue[j]);
       }
     }
   }
 
   return {
-    brands: allBrands,
+    companies: allCompanies,
     products: allProducts,
     isAllProductsLoading: isLoading,
     isAllProductsError,

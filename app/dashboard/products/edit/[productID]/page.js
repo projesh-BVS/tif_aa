@@ -86,7 +86,7 @@ const EditProduct = ({ params }) => {
   };
 
   const [fields, setFields] = useState({
-    brandID: "",
+    companyID: "",
     productID: 1698810128507,
     productName: "",
     description: "",
@@ -144,7 +144,6 @@ const EditProduct = ({ params }) => {
     // Submit all data to your backend
     event.preventDefault();
     if (isFormValid()) {
-      
       setIsUploading(true);
       try {
         const response = await axios.post(
@@ -153,65 +152,60 @@ const EditProduct = ({ params }) => {
         );
 
         if (response.status === 200) {
-         
           setUploadMessageCurrent(uploadMessageSuccess);
           setShowUploadStatus(true);
         } else {
-          
           setUploadMessageCurrent(uploadMessageError);
           setShowUploadStatus(true);
         }
       } catch (err) {
-        
         setUploadMessageCurrent(uploadMessageError);
         setShowUploadStatus(true);
       }
       setIsUploading(false);
     } else {
-      
     }
   };
 
-  const promtDelete = (event)=>{
-      event.preventDefault();
-      setShowDeleteConfirmation(true);
-  }
+  const promtDelete = (event) => {
+    event.preventDefault();
+    setShowDeleteConfirmation(true);
+  };
 
   const handleDelete = async (event) => {
     // Submit all data to your backend
     event.preventDefault();
-    
-      setIsUploading(true);
-      try {
-        const response = await axios.delete(
-          "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/product?glb=" +
-            fields.glb +
-            "&poster=" +
-            fields.poster +
-            "&usdz=" +
-            fields.usdz +
-            "&productID=" +
-            fields.productID
-        );
 
-        if (response.status === 200) {
-          setUploadMessageCurrent(deleteMessageSuccess);
-          //setShowDeleteConfirmation(false);
-          setShowUploadStatus(true);
-          setProductDeleted(true);
-          console.log("Modal status " + showUploadStatus);
-        } else {
-          setUploadMessageCurrent(deleteMessageError);
-          setShowDeleteConfirmation(false);
-          setShowUploadStatus(true);
-        }
-      } catch (err) {
+    setIsUploading(true);
+    try {
+      const response = await axios.delete(
+        "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/product?glb=" +
+          fields.glb +
+          "&poster=" +
+          fields.poster +
+          "&usdz=" +
+          fields.usdz +
+          "&productID=" +
+          fields.productID
+      );
+
+      if (response.status === 200) {
+        setUploadMessageCurrent(deleteMessageSuccess);
+        //setShowDeleteConfirmation(false);
+        setShowUploadStatus(true);
+        setProductDeleted(true);
+        console.log("Modal status " + showUploadStatus);
+      } else {
         setUploadMessageCurrent(deleteMessageError);
         setShowDeleteConfirmation(false);
         setShowUploadStatus(true);
       }
-      setIsUploading(false);
-   
+    } catch (err) {
+      setUploadMessageCurrent(deleteMessageError);
+      setShowDeleteConfirmation(false);
+      setShowUploadStatus(true);
+    }
+    setIsUploading(false);
   };
 
   useEffect(() => {
@@ -284,7 +278,7 @@ const EditProduct = ({ params }) => {
         product &&
         product.data != null &&
         !isProductError &&
-        fields.brandID != "" && (
+        fields.companyID != "" && (
           <form className="flex flex-col gap-6 items-center w-full h-full overflow-auto -mt-6">
             <section className="flex px-6 gap-4 w-full items-center justify-center">
               <ProductUploadCard_Model
@@ -295,7 +289,7 @@ const EditProduct = ({ params }) => {
 
             <section className="flex px-6 gap-4 w-full items-center justify-center">
               <ProductUploadCard_About
-                brandList={owner.brandList}
+                companyList={owner.companyList}
                 handleChange={handleChange}
                 handleDropdown={handleDropdown}
                 fieldsData={fields}

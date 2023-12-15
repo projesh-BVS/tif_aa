@@ -27,12 +27,12 @@ export default function DashboardLayout({ children }) {
           <DashSidebarItem
             icon={<BuildingOffice2Icon className="h-6 w-6" />}
             text={"Companies"}
-            page="/dashboard/brands"
+            page="/dashboard/companies"
           />
           <DashSidebarItem
             icon={<BuildingStorefrontIcon className="h-6 w-6" />}
             text={"Outlets"}
-            page="/dashboard/locked"
+            page="/dashboard/outlets"
           />
           <DashSidebarItem
             icon={<ShoppingBagIcon className="h-6 w-6" />}

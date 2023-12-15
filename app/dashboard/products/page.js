@@ -4,7 +4,7 @@ import DashPageHeader from "@/components/Dashboard/DashPageHeader";
 import { PlusIcon, ShoppingBagIcon } from "@heroicons/react/24/solid";
 import { useAllProducts } from "@/hooks/useAllProducts";
 import { useSearchParams } from "next/navigation";
-import ProductBrandSelector from "@/components/Dashboard/DashboardProducts/ProductBrandSelector";
+import ProductCompanySelector from "@/components/Dashboard/DashboardProducts/ProductCompanySelector";
 import Link from "next/link";
 import ProductCard from "@/components/Dashboard/DashboardProducts/ProductCard";
 
@@ -23,15 +23,15 @@ function Products() {
   }, []); // We pass an empty dependency array so this runs once on mount.
 
   const searchParams = useSearchParams();
-  const productFilterQuery = searchParams.get("productBrand");
+  const productFilterQuery = searchParams.get("productCompany");
   const initialProductFilter = productFilterQuery
     ? parseInt(productFilterQuery)
     : -1; // Use -1 for "All"
 
-  const { brands, products, isAllProductsLoading, isAllProductsError } =
+  const { companies, products, isAllProductsLoading, isAllProductsError } =
     useAllProducts(1);
 
-  const [selectedBrand, setSelectedBrand] = useState(initialProductFilter);
+  const [selectedCompany, setSelectedCompany] = useState(initialProductFilter);
 
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">
@@ -63,10 +63,10 @@ function Products() {
       {!isAllProductsLoading && !isAllProductsError && (
         <section className="flex px-6 gap-4 -mt-6 w-full items-center justify-center">
           <div className="flex flex-col md:flex-row items-center justify-between w-full p-2 lg:p-4 gap-2 rounded-xl shadow-md bg-white">
-            <ProductBrandSelector
-              brands={brands}
-              selectedBrand={selectedBrand}
-              onChange={setSelectedBrand}
+            <ProductCompanySelector
+              companies={companies}
+              selectedCompany={selectedCompany}
+              onChange={setSelectedCompany}
             />
 
             <Link
@@ -87,7 +87,7 @@ function Products() {
           {products
             .filter(
               (product) =>
-                selectedBrand === -1 || product.brandID === selectedBrand
+                selectedCompany === -1 || product.companyID === selectedCompany
             )
             .map((product) => (
               <ProductCard key={product.productID} productInfo={product} />

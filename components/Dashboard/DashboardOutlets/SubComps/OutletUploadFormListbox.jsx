@@ -1,76 +1,40 @@
-"use client";
-import { Fragment, useState, useEffect } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckCircleIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
+import { Fragment, useEffect, useState } from "react";
 
-const ProductUploadFormListbox = ({
+const OutletUploadFormListbox = ({
   labelText,
   optionsArray,
+  initialSelectedIndex = null,
   onOptionSelect,
   showBelow = true,
-  isDependant = false,
-  initialSelected = null,
+  showLogs = false,
 }) => {
-  console.log(
-    "Initial data in list box " +
-      labelText +
-      " - " +
-      JSON.stringify(initialSelected)
-  );
   const [selectedOption, setSelectedOption] = useState(
-    initialSelected === null ? optionsArray[0] : initialSelected
-  ); //This selected option is set after render
-  const [options, setOptions] = useState(optionsArray);
-
-  useEffect(() => {
-    setOptions(optionsArray);
-  }, [optionsArray[0].display]);
-
-  useEffect(() => {
-    if (isDependant) {
-      //When company is swtiFirst category of the company is not selected when editing
-      console.log(
-        "options reset and initialSelected Is " +
-          JSON.stringify(initialSelected)
-      );
-      console.log(
-        "OPTIONS ARRAY INCLUDES INITIAL - " +
-          DoesInitialExist(optionsArray, initialSelected)
-      );
-      setSelectedOption(
-        DoesInitialExist(optionsArray, initialSelected)
-          ? initialSelected
-          : options[0]
-      );
-      handleOnChange(
-        DoesInitialExist(optionsArray, initialSelected)
-          ? initialSelected
-          : options[0]
-      );
-    }
-    /*else if(isDependant && initialSelected != null) {
-      setSelectedOption(initialSelected);
-      handleOnChange(initialSelected);
-    }*/
-  }, [options]);
+    initialSelectedIndex === null
+      ? optionsArray[0]
+      : optionsArray[initialSelectedIndex]
+  );
 
   function handleOnChange(option) {
     setSelectedOption(option);
 
-    onOptionSelect(option);
-    console.log(labelText + " | Option changed to on click: " + option.display);
+    if (onOptionSelect != null) {
+      onOptionSelect(option);
+    }
   }
 
   useEffect(() => {
-    if (initialSelected === null) {
-      handleOnChange(optionsArray[0]); //Issue in edit page auto update to 0
+    if (initialSelectedIndex === null) {
+      handleOnChange(optionsArray[0]);
+    } else {
+      handleOnChange(optionsArray[initialSelectedIndex]);
     }
-  }, []);
+  }, [initialSelectedIndex]);
 
   return (
-    //<Listbox value={isDependant ? (options.includes(selectedOption) ? selectedOption : options[0]) : selectedOption} by="id" onChange={handleOnChange}>
     <Listbox value={selectedOption} by="id" onChange={handleOnChange}>
-      <div className="relative">
+      <div className="relative w-full">
         <div className="relative">
           <Listbox.Label
             className="
@@ -156,13 +120,8 @@ const ProductUploadFormListbox = ({
   );
 };
 
-export default ProductUploadFormListbox;
+export default OutletUploadFormListbox;
 
-export function DoesInitialExist(optionsList, initialOption) {
-  for (let i = 0; i < optionsList.length; i++) {
-    if (optionsList[i].display === initialOption.display) {
-      return true;
-    }
-  }
-  return false;
+function Log(logMsg, showLogs = false) {
+  if (showLogs) console.log(logMsg);
 }

@@ -1,5 +1,5 @@
 import {
-  BuildingOffice2Icon,  
+  BuildingOffice2Icon,
   ShoppingBagIcon,
 } from "@heroicons/react/24/solid";
 import DashInfoItem from "../DashInfoItem";
@@ -52,8 +52,8 @@ const HomePrimaryInfoCard = ({ ownerData, isOwnerLoading, isOwnerError }) => {
         <DashInfoItem
           icon={<BuildingOffice2Icon className="h-7 w-7 lg:h-8 lg:w-8" />}
           text="Companies"
-          page="/dashboard/brands"
-          count={GetBrandCount((ownerData = { ownerData }))}
+          page="/dashboard/companies"
+          count={GetCompanyCount((ownerData = { ownerData }))}
         />
         <hr className="text-gray-500" />
         <DashInfoItem
@@ -79,13 +79,13 @@ export function GetGreeting() {
   return greeting;
 }
 
-export function GetBrandCount({ ownerData }) {
-  return ownerData.brandList.length;
+export function GetCompanyCount({ ownerData }) {
+  return ownerData.companyList.length;
 }
 
 export function GetProductCount({ ownerData }) {
   var pCount = 0;
-  ownerData.brandList.map((brand) => (pCount += brand.productCount));
+  ownerData.companyList.map((company) => (pCount += company.productCount));
 
   return pCount;
 }

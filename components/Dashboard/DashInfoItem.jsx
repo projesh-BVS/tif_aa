@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 
-const DashInfoItem = ({ icon, text, page, count }) => {
+const DashInfoItem = ({ icon, text, page, count, fitWidth = true }) => {
   return (
-    <div className="flex gap-6 px-2 py-1 items-center justify-between w-full md:w-fit rounded-xl border-2 border-tif-blue">
+    <div
+      className={`${
+        fitWidth ? "md:w-fit" : ""
+      } flex gap-6 px-2 py-1 items-center justify-between w-full rounded-xl border-2 border-tif-blue`}
+    >
       {/* Icon, count and category section */}
       <div className="flex w-auto gap-2 items-center">
         <div className="flex justify-center items-center gap-2 p-2 rounded-lg text-2xl font-bold text-white bg-gradient-to-br from-tif-lavender to-tif-pink">

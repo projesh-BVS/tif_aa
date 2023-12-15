@@ -19,8 +19,8 @@ export default function Dashboard() {
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 -mt-6 px-4 gap-4 w-full">
           <DashInfoCard
             icon={<BuildingStorefrontIcon className="w-8 h-8" />}
-            text="Brands"
-            page="/dashboard/brands"
+            text="Companies"
+            page="/dashboard/companies"
             count="57"
           />
           <DashInfoCard
