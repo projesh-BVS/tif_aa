@@ -155,7 +155,7 @@ export function FileUploadCard({
     if (fileTypes[0] == "glb" || fileTypes[0] == "usdz")
       handleUpload("tryitproductmodels", file, fileTypes, setUploadPercent);
     else if (fileTypes[0] == "webp" || fileTypes[0] == "png")
-      handleUpload("tryitproductimages", file, fileTypes, setUploadPercent);
+      handleUpload("brandlogo", file, fileTypes, setUploadPercent);
   };
   const handleTypeError = (err) => {
     setTypeError(true);
