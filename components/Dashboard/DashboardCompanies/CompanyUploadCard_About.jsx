@@ -171,6 +171,7 @@ export function FileUploadCard({
     precentageCallback
   ) => {
     const options = {
+      headers: { "Content-Type": "image/png" },
       onUploadProgress: (progressEvent) => {
         const { loaded, total } = progressEvent;
         let precentage = Math.floor((loaded * 100) / total);
