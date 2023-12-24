@@ -50,6 +50,7 @@ const AddProduct = () => {
 
   const [fields, setFields] = useState({
     companyID: "",
+    outletIDs: "",
     productID: 1698810128507,
     productName: "",
     description: "",
@@ -192,6 +193,7 @@ const AddProduct = () => {
               companyList={owner.companyList}
               handleChange={handleChange}
               handleDropdown={handleDropdown}
+              //fieldsData={fields}
             />
           </section>
 

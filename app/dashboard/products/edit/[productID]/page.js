@@ -87,6 +87,7 @@ const EditProduct = ({ params }) => {
 
   const [fields, setFields] = useState({
     companyID: "",
+    outletIDs: "",
     productID: 1698810128507,
     productName: "",
     description: "",
@@ -113,7 +114,7 @@ const EditProduct = ({ params }) => {
 
   function SetProductData(product) {
     //Set fields
-    console.log(JSON.stringify(product.data));
+    console.log("Product Data" + JSON.stringify(product.data));
     setFields(JSON.parse(JSON.stringify(product.data)));
   }
 
@@ -142,6 +143,7 @@ const EditProduct = ({ params }) => {
 
   const handleSubmit = async (event) => {
     // Submit all data to your backend
+    console.log("Uploading Form Data - " + JSON.stringify(fields));
     event.preventDefault();
     if (isFormValid()) {
       setIsUploading(true);

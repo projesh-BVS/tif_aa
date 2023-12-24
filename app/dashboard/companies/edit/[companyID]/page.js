@@ -153,7 +153,7 @@ const EditCompany = ({ params }) => {
                 fieldsData={fields}
                 onFieldChangeCallback={HandleFieldValueChange}
               />
-        </section>*/}
+            </section>*/}
 
             <section className="flex px-6 pb-6 gap-4 w-full items-center justify-center">
               <button

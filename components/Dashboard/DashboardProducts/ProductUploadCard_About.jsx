@@ -2,6 +2,7 @@ import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import ProductUploadFormField from "./SubComps/ProductUploadFormField";
 import ProductUploadFormListbox from "./SubComps/ProductUploadFormListbox";
 import { useState, useEffect } from "react";
+import ProductUploadFormListboxMulti from "./SubComps/ProductUploadFormListboxMulti";
 
 const ProductUploadCard_About = ({
   companyList,
@@ -23,6 +24,8 @@ const ProductUploadCard_About = ({
   );
 
   var formattedCategoryList = GetFormattedCategories(currSelectedCompany);
+  var formattedOutletList = GetFormattedOutlets(currSelectedCompany);
+  console.log("OUTLET LIST: " + JSON.stringify(formattedOutletList));
 
   const [currSelectedCategory, setCurrSelectedCategory] = useState(
     fieldsData === null
@@ -31,6 +34,16 @@ const ProductUploadCard_About = ({
           GetDataCategoryIndex(formattedCategoryList, fieldsData.category)
         ]
   );
+
+  const [currSelectedOutlet, setCurrSelectedOutlet] = useState(
+    GetDataOutletSelectedArray(
+      formattedOutletList,
+      fieldsData === null ? "" : fieldsData.outletIDs
+    )
+  );
+
+  /*const [currSelectedOutlet, setCurrSelectedOutlet] =
+    useState(formattedOutletList);*/
 
   useEffect(() => {
     // console.log("Setting initial company ")
@@ -41,6 +54,15 @@ const ProductUploadCard_About = ({
     // console.log("Setting initial category ")
     handleDropdown("category", currSelectedCategory.display);
   }, [currSelectedCategory]);
+
+  useEffect(() => {
+    //console.log("Setting initial outlet")
+    let outletIDsArray = [];
+    for (let i = 0; i < currSelectedOutlet.length; i++) {
+      outletIDsArray.push(currSelectedOutlet[i].id);
+    }
+    handleDropdown("outletIDs", outletIDsArray);
+  }, [currSelectedOutlet]);
 
   /*useEffect(() => {  
   if(fieldsData!= null){
@@ -72,13 +94,14 @@ const ProductUploadCard_About = ({
         />
         {console.log("while rendering " + currSelectedCategory.display)}
 
-        {/* Category Dropdown */}
-        <ProductUploadFormListbox
-          labelText="Category"
-          optionsArray={formattedCategoryList}
-          onOptionSelect={setCurrSelectedCategory}
-          initialSelected={currSelectedCategory}
+        {/* Outlet Dropdown */}
+        <ProductUploadFormListboxMulti
+          labelText="Outlets"
+          optionsArray={formattedOutletList}
+          onOptionSelect={setCurrSelectedOutlet}
+          initialSelected={currSelectedOutlet}
           isDependant={true}
+          isMultiSelect={true}
         />
 
         <ProductUploadFormField
@@ -89,14 +112,25 @@ const ProductUploadCard_About = ({
           fieldValue={fieldsData === null ? "" : fieldsData.productName}
           handleChange={handleChange}
         />
-        <ProductUploadFormField
+
+        {/* Category Dropdown */}
+        <ProductUploadFormListbox
+          labelText="Category"
+          optionsArray={formattedCategoryList}
+          onOptionSelect={setCurrSelectedCategory}
+          initialSelected={currSelectedCategory}
+          isDependant={true}
+        />
+
+        {/*<ProductUploadFormField
           fieldID="productTags"
           fieldName="itemTags"
           fieldType="text"
           fieldLabel="Product Tags"
           fieldValue={fieldsData === null ? "" : fieldsData.itemTags}
           handleChange={handleChange}
-        />
+        />*/}
+
         <div className="col-span-full">
           <ProductUploadFormField
             fieldID="productDescription"
@@ -157,6 +191,19 @@ export function GetFormattedCategories(company, doLog = false) {
   return formattedCategories;
 }
 
+export function GetFormattedOutlets(company, doLog = false) {
+  var formattedOutlets = [];
+  formattedOutlets.length = 0;
+
+  formattedOutlets = company.apiVal.outletList.map((outlet, index) => ({
+    id: outlet.outletID,
+    display: outlet.outletName,
+    apiVal: outlet,
+  }));
+
+  return formattedOutlets;
+}
+
 export function GetDataCompanyIndex(formattedCompanyArray, dataCompanyID) {
   for (let index = 0; index < formattedCompanyArray.length; index++) {
     // console.log(
@@ -188,4 +235,39 @@ export function GetDataCategoryIndex(formatttedCategoryArray, category) {
     }
   }
   return 0;
+}
+
+export function GetDataOutletSelectedArray(
+  formattedOutletsArray,
+  productOutletIDs
+) {
+  console.log("PRODUCT OUTLET IDS - " + JSON.stringify(productOutletIDs));
+  let dataSelectedArray = [];
+  dataSelectedArray.length = 0;
+
+  for (let index = 0; index < formattedOutletsArray.length; index++) {
+    for (
+      let productOutletIndex = 0;
+      productOutletIndex < productOutletIDs.length;
+      productOutletIndex++
+    ) {
+      console.log(
+        "Checking Index: " +
+          index +
+          " | formattedOutletArray[index]: " +
+          formattedOutletsArray[index].id +
+          " look for " +
+          productOutletIDs[productOutletIndex]
+      );
+      if (
+        formattedOutletsArray[index].id === productOutletIDs[productOutletIndex]
+      ) {
+        dataSelectedArray.push(formattedOutletsArray[index]);
+      }
+    }
+  }
+
+  console.log("Current Selected Outlets Length - " + dataSelectedArray.length);
+  if (dataSelectedArray.length > 0) return dataSelectedArray;
+  else return formattedOutletsArray;
 }

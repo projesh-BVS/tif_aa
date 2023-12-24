@@ -155,7 +155,7 @@ export function FileUploadCard({
     if (fileTypes[0] == "glb" || fileTypes[0] == "usdz")
       handleUpload("tryitproductmodels", file, fileTypes, setUploadPercent);
     else if (fileTypes[0] == "webp" || fileTypes[0] == "png")
-      handleUpload("brandlogo", file, fileTypes, setUploadPercent);
+      handleUpload("tryitproductimages", file, fileTypes, setUploadPercent);
   };
   const handleTypeError = (err) => {
     setTypeError(true);
@@ -202,6 +202,11 @@ export function FileUploadCard({
     console.log(file);
     // Upload file to S3 using signed URL
     const responseUpload = await axios.put(upload_url, file, options); //Check for error - Modal + Make field blank
+
+    /*const result = await axios.put(url, file, {
+      withCredentials: true,
+      headers: { "Content-Type": "image/png" },
+    });*/
     console.log("response " + JSON.stringify(responseUpload));
     console.log("response text " + responseUpload.statusText);
 
