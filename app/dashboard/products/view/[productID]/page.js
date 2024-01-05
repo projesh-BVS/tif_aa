@@ -4,14 +4,61 @@ import useProduct from "@/hooks/useProduct";
 import MagentoClipboardCopy from "@/libs/Common Libs/MagentoClipboardCopy";
 import { getFormattedPrice } from "@/utils/productInfoUtils";
 import { ClipboardIcon, ShoppingBagIcon } from "@heroicons/react/24/solid";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const ProductView = ({ params }) => {
   const { product, isProductLoading, isProductError } = useProduct(
     params.productID
   );
+  const [showVariantSelector, setShowVariantSelector] = useState(false);
+  //console.log(product);
 
-  console.log(product);
+  let modelViewerVariants = null;
+  let modelVariantNames = null;
+  let select = null;
+
+  useEffect(() => {
+    //console.log("PRODUCT DATA UPDATED");
+    modelViewerVariants = document.querySelector("#CurrProductViewer");
+    //console.log("Model Viewer Element - " + modelViewerVariants);
+
+    if (modelViewerVariants != null) {
+      modelViewerVariants.addEventListener("load", () => {
+        modelVariantNames = modelViewerVariants.availableVariants;
+
+        //console.log("Variant Names - " + modelVariantNames);
+
+        if (modelVariantNames.length > 0) {
+          setShowVariantSelector(true);
+        } else setShowVariantSelector(false);
+      });
+    }
+  }, [product]);
+
+  useEffect(() => {
+    if (showVariantSelector) {
+      modelViewerVariants = document.querySelector("#CurrProductViewer");
+      modelVariantNames = modelViewerVariants.availableVariants;
+      select = document.querySelector("#VariantDropdown");
+
+      for (const name of modelVariantNames) {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      }
+
+      const option = document.createElement("option");
+      option.value = "default";
+      option.textContent = "default";
+      select.appendChild(option);
+
+      select.addEventListener("input", (event) => {
+        modelViewerVariants.variantName =
+          event.target.value === "default" ? null : event.target.value;
+      });
+    }
+  }, [showVariantSelector]);
 
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">
@@ -59,6 +106,7 @@ const ProductView = ({ params }) => {
               className="flex flex-col gap-4 w-full xl:w-1/2 justify-center items-center relative shadow-md rounded-lg"
             >
               <model-viewer
+                id="CurrProductViewer"
                 src={product.data.glb}
                 ios-src={product.data.usdz}
                 poster={product.data.poster}
@@ -67,6 +115,7 @@ const ProductView = ({ params }) => {
                 camera-controls
                 touch-action="pan-y"
                 auto-rotate
+                autoplay
                 ar
                 ar-scale="fixed"
                 style={{
@@ -83,6 +132,15 @@ const ProductView = ({ params }) => {
                 >
                   View product in AR
                 </button>
+                {showVariantSelector && (
+                  <div className="flex items-center justify-center gap-4 w-full p-2 font-medium text-white bg-slate-600">
+                    <h1 className="whitespace-nowrap">Product Variants</h1>
+                    <select
+                      id="VariantDropdown"
+                      className="w-full p-2 rounded-md bg-tif-blue text-white"
+                    ></select>
+                  </div>
+                )}
               </model-viewer>
             </div>
             <div className="flex flex-col gap-2 w-full text-gray-500">
