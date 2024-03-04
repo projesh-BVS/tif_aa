@@ -1,12 +1,68 @@
+import { useState } from "react";
 import ReportsTableContent from "./SubComps/ReportsTableContent";
 import ReportsTableHeader from "./SubComps/ReportsTableHeader";
+import ReportsGraphsContent from "./SubComps/ReportsGraphsContent";
+import useAnalytics from "@/hooks/useAnalytics";
+import LoadingIndicator from "@/components/Common/LoadingIndicator";
 
 const ReportsTable = ({ companyInfo }) => {
+  const { analytics, isAnalyticsLoading, isAnalyticsError } = useAnalytics(
+    companyInfo.companyID
+  );
+  const [reportViewMode, setReportViewMode] = useState(0);
+
+  function Callback_OnViewModeChange(viewMode) {
+    setReportViewMode(viewMode);
+  }
+
   return (
     <section className="flex shrink-0 flex-col items-center justify-center w-full rounded-xl shadow-md bg-white overflow-clip">
-      <ReportsTableHeader companyInfo={companyInfo} />
-      <ReportsTableContent companyID={companyInfo.companyID} />
-      {/*<div className="flex p-2 lg:p-4 gap-2 w-full">Content 2</div>*/}
+      {isAnalyticsLoading && (
+        <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-gray-500">
+          <LoadingIndicator />
+          <span className="font-semibold lg:text-xl">Loading Reports</span>
+          <span className="font-light text-xs lg:text-sm">Please wait</span>
+        </section>
+      )}
+
+      {analytics && analytics.data.length == 0 && (
+        <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-red-500">
+          <span className="font-semibold lg:text-xl">
+            Sorry, there was an error while loading data
+          </span>
+          <span className="font-light text-xs lg:text-sm">
+            Please refresh the page if you still see an error after 30 secs
+          </span>
+        </section>
+      )}
+
+      {isAnalyticsError && (
+        <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-red-500">
+          <span className="font-semibold lg:text-xl">
+            Sorry, there was an error while loading data
+          </span>
+          <span className="font-light text-xs lg:text-sm">
+            Please refresh the page if you still see an error after 30 secs
+          </span>
+        </section>
+      )}
+
+      {analytics && analytics.data.length > 0 && !isAnalyticsError && (
+        <section className="flex flex-col w-full items-center justify-center overflow-auto">
+          <ReportsTableHeader
+            companyInfo={companyInfo}
+            initialViewMode={reportViewMode}
+            OnViewModeChangeCallback={Callback_OnViewModeChange}
+          />
+          {reportViewMode === 1 && (
+            <ReportsTableContent analyticsInfo={analytics.data} />
+          )}
+
+          {reportViewMode === 0 && (
+            <ReportsGraphsContent analyticsInfo={analytics.data} />
+          )}
+        </section>
+      )}
     </section>
   );
 };

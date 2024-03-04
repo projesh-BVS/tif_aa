@@ -9,7 +9,8 @@ import DataTable from "react-data-table-component";
 
 export default function Reports() {
   const { owner, isOwnerLoading, isOwnerError } = useOwner(1);
-  const [selectedCompany, setSelectedCompany] = useState(-1); //-1 for All
+  //const [selectedCompany, setSelectedCompany] = useState(-1); //-1 for All
+  const [selectedCompany, setSelectedCompany] = useState(102); //-1 for All
 
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">

@@ -8,7 +8,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-const ProductUploadCard_Model = ({ handleFile, fieldsData = null }) => {  
+const ProductUploadCard_Model = ({ handleFile, fieldsData = null }) => {
   useEffect(() => {
     // This is where we will initialize Model Viewer.
     // We'll do this asynchronously because it's a heavy operation.
@@ -27,13 +27,13 @@ const ProductUploadCard_Model = ({ handleFile, fieldsData = null }) => {
   const [usdzFile, setUSDZFile] = useState(null);
   const [posterFile, setPosterFile] = useState(null);
 
-    useEffect(() => {
-      if(fieldsData != null) {
-        setGLBFile(fieldsData.glb);
-        setUSDZFile(fieldsData.usdz);
-        setPosterFile(fieldsData.poster);
-      }
-    }, [fieldsData])
+  useEffect(() => {
+    if (fieldsData != null) {
+      setGLBFile(fieldsData.glb);
+      setUSDZFile(fieldsData.usdz);
+      setPosterFile(fieldsData.poster);
+    }
+  }, [fieldsData]);
 
   const fileSelected = (file, fileType) => {
     console.log("FILE SELECTED" + file);
@@ -212,6 +212,7 @@ export function FileUploadCard({
     precentageCallback
   ) => {
     const options = {
+      headers: { "Content-Type": "image/png" },
       onUploadProgress: (progressEvent) => {
         const { loaded, total } = progressEvent;
         let precentage = Math.floor((loaded * 100) / total);

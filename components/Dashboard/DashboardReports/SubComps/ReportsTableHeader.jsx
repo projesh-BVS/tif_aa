@@ -1,7 +1,22 @@
-import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import {
+  PresentationChartLineIcon,
+  TableCellsIcon,
+} from "@heroicons/react/24/solid";
 import Image from "next/image";
+import { useState } from "react";
 
-const ReportsTableHeader = ({ companyInfo }) => {
+const ReportsTableHeader = ({
+  companyInfo,
+  initialViewMode,
+  OnViewModeChangeCallback,
+}) => {
+  const [viewMode, setViewMode] = useState(initialViewMode);
+
+  function ChangeViewState(viewState) {
+    setViewMode(viewState);
+    if (OnViewModeChangeCallback) OnViewModeChangeCallback(viewState);
+  }
+
   return (
     <section className="flex flex-col md:flex-row p-2 gap-2 items-center justify-between w-full border-b-2 border-tif-blue">
       <div className="flex flex-col w-full text-left">
@@ -38,6 +53,26 @@ const ReportsTableHeader = ({ companyInfo }) => {
           <h1>Export Report</h1>
         </button>
       </div>*/}
+
+      <div className="flex flex-col md:flex-row gap-1 lg:gap-2 items-center justify-center md:justify-end w-full md:w-fit">
+        <button
+          className="flex items-center justify-center p-2 gap-2 w-full md:w-fit rounded-lg font-semibold text-white bg-tif-blue hover:bg-tif-lavender disabled:bg-tif-blue/40 transition-all"
+          disabled={viewMode === 0}
+          onClick={() => ChangeViewState(0)}
+        >
+          <PresentationChartLineIcon className="md:h-7 h-5 md:w-7 w-5" />
+          <h1 className="whitespace-nowrap">View Graphs</h1>
+        </button>
+
+        <button
+          className="flex items-center justify-center p-2 gap-2 w-full md:w-fit rounded-lg font-semibold text-white bg-tif-blue hover:bg-tif-lavender disabled:bg-tif-blue/40 transition-all"
+          disabled={viewMode === 1}
+          onClick={() => ChangeViewState(1)}
+        >
+          <TableCellsIcon className="md:h-7 h-5 md:w-7 w-5" />
+          <h1 className="whitespace-nowrap">View Data</h1>
+        </button>
+      </div>
     </section>
   );
 };
