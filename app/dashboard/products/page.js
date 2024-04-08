@@ -30,7 +30,7 @@ function Products() {
     : -1; // Use -1 for "All"
 
   const { companies, products, isAllProductsLoading, isAllProductsError } =
-    useAllProducts(1);
+    useAllProducts();
 
   const [selectedCompany, setSelectedCompany] = useState(initialProductFilter);
 
@@ -90,8 +90,13 @@ function Products() {
               (product) =>
                 selectedCompany === -1 || product.companyID === selectedCompany
             )
-            .map((product) => (
-              <ProductCard key={product.productID} productInfo={product} />
+            .map((product, index) => (
+              <ProductCard
+                key={product.productID}
+                index={index}
+                productInfo={product}
+                display3D={false}
+              />
             ))}
         </div>
       )}

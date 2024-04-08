@@ -17,7 +17,9 @@ const DashPageHeader = ({ icon, text, isLoading, showBackBtn }) => {
         </button>
       )}
       <div className="text-gray-400">{icon}</div>
-      <div className=" font-black text-4xl text-gray-400">{text}</div>
+      <div className=" font-black text-2xl md:text-4xl text-gray-400">
+        {text}
+      </div>
       {isLoading && <LoadingIndicator />}
     </section>
   );

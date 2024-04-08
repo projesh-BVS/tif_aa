@@ -1,7 +1,14 @@
 import Link from "next/link";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 
-const DashInfoItem = ({ icon, text, page, count, fitWidth = true }) => {
+const DashInfoItem = ({
+  icon,
+  text,
+  page,
+  count,
+  fitWidth = true,
+  showButton = true,
+}) => {
   return (
     <div
       className={`${
@@ -21,13 +28,15 @@ const DashInfoItem = ({ icon, text, page, count, fitWidth = true }) => {
       </div>
 
       {/* Button Section */}
-      <div className="flex gap-2 items-center justify-center">
-        <Link href={page}>
-          <button className="p-2 rounded-lg text-sm text-white bg-tif-blue hover:bg-tif-lavender hover:shadow-md whitespace-nowrap transition-all">
-            <ChevronRightIcon className="h-7 w-7 lg:h-8 lg:w-8" />
-          </button>
-        </Link>
-      </div>
+      {showButton && (
+        <div className="flex gap-2 items-center justify-center">
+          <Link href={page}>
+            <button className="p-2 rounded-lg text-sm text-white bg-tif-blue hover:bg-tif-lavender hover:shadow-md whitespace-nowrap transition-all">
+              <ChevronRightIcon className="h-7 w-7 lg:h-8 lg:w-8" />
+            </button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

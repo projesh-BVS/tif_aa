@@ -5,7 +5,7 @@ import ReportsGraphsContent from "./SubComps/ReportsGraphsContent";
 import useAnalytics from "@/hooks/useAnalytics";
 import LoadingIndicator from "@/components/Common/LoadingIndicator";
 
-const ReportsTable = ({ companyInfo }) => {
+const ReportsTable = ({ index, companyInfo }) => {
   const { analytics, isAnalyticsLoading, isAnalyticsError } = useAnalytics(
     companyInfo.companyID
   );
@@ -16,7 +16,10 @@ const ReportsTable = ({ companyInfo }) => {
   }
 
   return (
-    <section className="flex shrink-0 flex-col items-center justify-center w-full rounded-xl shadow-md bg-white overflow-clip">
+    <section
+      className="animate-slideInSpringedLeft flex shrink-0 flex-col items-center justify-center w-full rounded-xl shadow-md bg-white overflow-clip"
+      style={{ animationDelay: `${index * 50}ms` }}
+    >
       {isAnalyticsLoading && (
         <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-gray-500">
           <LoadingIndicator />

@@ -3,7 +3,12 @@ import DashPageHeader from "@/components/Dashboard/DashPageHeader";
 import useProduct from "@/hooks/useProduct";
 import MagentoClipboardCopy from "@/libs/Common Libs/MagentoClipboardCopy";
 import { getFormattedPrice } from "@/utils/productInfoUtils";
-import { ClipboardIcon, ShoppingBagIcon } from "@heroicons/react/24/solid";
+import {
+  ClipboardIcon,
+  CodeBracketIcon,
+  InformationCircleIcon,
+  ShoppingBagIcon,
+} from "@heroicons/react/24/solid";
 import React, { useEffect, useState } from "react";
 
 const ProductView = ({ params }) => {
@@ -170,11 +175,63 @@ const ProductView = ({ params }) => {
               </p>
             </div>
           </div>
-          <div className="flex flex-col bg-white font-semibold rounded-lg overflow-clip shadow-md">
-            <div className="flex p-2 items-center justify-between">
-              <h1 className="w-full">Magento Code</h1>
+
+          {/*<div className="flex flex-col w-full bg-gradient-to-br from-tif-blue to-tif-pink font-semibold text-white rounded-lg overflow-clip shadow-md">
+            <div className="flex p-2 w-full h-14 items-center justify-between">
+              <div className="flex items-center justify-start w-full gap-2">
+                <InformationCircleIcon className="w-6 h-6" />
+                <h1 className="w-full">Additional Info</h1>
+              </div>
+            </div>
+
+            <div className="flex flex-col w-full text-slate-600 bg-white font-normal">
+              <div className="flex w-full items-center justify-between border-b-2">
+                <h1 className="w-1/2 p-4 border-r-2">
+                  <span>ID - </span>
+                  {product.data.productID}
+                </h1>
+                <h1 className="w-1/2 p-4">
+                  <span>SKU - </span>
+                  {product.data.productSKU
+                    ? product.data.productSKU
+                    : "Server Error"}
+                </h1>
+              </div>
+              <div className="flex w-full items-center justify-between border-b-2">
+                <h1 className="w-full p-4">
+                  <span>Company - </span>
+                  {product.data.productSKU
+                    ? product.data.productSKU
+                    : "Server Error"}
+                </h1>
+              </div>
+              <div className="flex w-full items-center justify-between  border-b-2">
+                <h1 className="w-full p-4">
+                  <span>Outlets - </span>
+                  {product.data.productSKU
+                    ? product.data.productSKU
+                    : "Server Error"}
+                </h1>
+              </div>
+              <div className="flex w-full items-center justify-between">
+                <h1 className="w-full p-4">
+                  <span>Category - </span>
+                  {product.data.productSKU
+                    ? product.data.productSKU
+                    : "Server Error"}
+                </h1>
+              </div>
+            </div>
+          </div>*/}
+
+          <div className="flex flex-col w-full bg-gradient-to-br from-tif-blue to-tif-pink font-semibold text-white rounded-lg overflow-clip shadow-md">
+            <div className="flex p-2 w-full h-14 items-center justify-between">
+              <div className="flex items-center justify-start w-full gap-2">
+                <CodeBracketIcon className="w-6 h-6" />
+                <h1 className="w-full">Magento Code</h1>
+              </div>
               <button
-                className="flex items-center justify-center gap-2 p-2 text-white bg-green-500 hover:bg-green-600 hover:shadow-md rounded-md"
+                className="flex items-center justify-center gap-2 p-2 text-white bg-green-500 hover:bg-green-600 hover:shadow-md border-2 border-white/50 rounded-md"
                 onClick={() =>
                   MagentoClipboardCopy(
                     product.data.glb,

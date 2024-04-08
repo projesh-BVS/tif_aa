@@ -3,13 +3,17 @@ import OutletCollectionCardList from "./OutletCollectionCardList";
 import LoadingIndicator from "@/components/Common/LoadingIndicator";
 
 const OutletCollection = ({
+  index,
   companyInfo,
   isValidatingData,
   editOutletCallback,
   deleteOutletCallback,
 }) => {
   return (
-    <section className="flex flex-col shrink-0 items-center w-full bg-white rounded-2xl shadow-md overflow-clip transition-all">
+    <section
+      className="animate-slideInSpringedLeft flex flex-col shrink-0 items-center w-full bg-white rounded-2xl shadow-md overflow-clip transition-all"
+      style={{ animationDelay: `${index * 50}ms` }}
+    >
       <OutletCollectionHeader companyInfo={companyInfo} />
       <div className="flex flex-col items-center justify-center w-full">
         {!isValidatingData && (

@@ -3,35 +3,56 @@ import {
   MagnifyingGlassIcon,
   PencilSquareIcon,
 } from "@heroicons/react/24/solid";
+import Image from "next/image";
 import Link from "next/link";
 
-const ProductCard = ({ productInfo }) => {
+const ProductCard = ({ index, productInfo, display3D = false }) => {
   return (
-    <section className="flex flex-col bg-white rounded-xl shadow-lg">
+    <section
+      className={`animate-appearSpringed flex flex-col bg-white rounded-xl shadow-lg`}
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
       <div
         id="card"
         className="flex flex-col px-2 py-2 gap-4 w-full h-full justify-between items-center relative"
       >
-        <model-viewer
-          src={productInfo.glb}
-          ios-src={productInfo.usdz}
-          poster={productInfo.poster}
-          alt="3D model of the product"
-          shadow-intensity="1"
-          camera-controls
-          touch-action="pan-y"
-          auto-rotate
-          ar
-          ar-scale="fixed"
-        >
-          <button
-            slot="ar-button"
-            id="ar-button"
-            className="bg-blue-500 shadow-lg p-2 text-white text-xs rounded-lg w-full bottom-0 absolute"
+        {display3D && (
+          <model-viewer
+            src={productInfo.glb}
+            ios-src={productInfo.usdz}
+            poster={productInfo.poster}
+            alt="3D model of the product"
+            shadow-intensity="1"
+            camera-controls
+            touch-action="pan-y"
+            auto-rotate
+            ar
+            ar-scale="fixed"
           >
-            View product in AR
-          </button>
-        </model-viewer>
+            <button
+              slot="ar-button"
+              id="ar-button"
+              className="bg-blue-500 shadow-lg p-2 text-white text-xs rounded-lg w-full bottom-0 absolute"
+            >
+              View product in AR
+            </button>
+          </model-viewer>
+        )}
+
+        {!display3D && (
+          <div className="relative flex items-center justify-center w-full h-60 bg-white rounded-lg overflow-clip">
+            <Image
+              src={productInfo.poster}
+              blurDataURL={productInfo.poster}
+              alt="Product Image"
+              placeholder="blur"
+              quality={100}
+              fill
+              sizes="15rem"
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+        )}
 
         <div className="flex flex-col gap-2 w-full text-gray-500">
           <h1 className="text-md font-semibold truncate">

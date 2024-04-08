@@ -77,7 +77,7 @@ const ProductUploadCard_About = ({
   }}, [fieldsData]);*/
 
   return (
-    <section className="flex flex-col gap-2 items-center justify-between w-full rounded-2xl shadow-md bg-white overflow-clip">
+    <section className="flex flex-col gap-2 items-center justify-between w-full rounded-2xl shadow-md bg-white">
       <div className="flex w-full items-center gap-4 px-4 py-2 text-xl font-bold text-white bg-gradient-to-br from-tif-lavender to-tif-pink">
         <InformationCircleIcon className="h-6 w-6 lg:h-7 lg:w-7" />
         <h1>About Product</h1>

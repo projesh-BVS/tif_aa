@@ -18,8 +18,10 @@ import LoadingIndicator from "@/components/Common/LoadingIndicator";
 import ModalDialog from "@/components/Common/ModalDialog";
 import ModalDialogConfirm from "@/components/Common/ModalDialogConfirm";
 import useProduct from "@/hooks/useProduct";
+import { useSession } from "next-auth/react";
 
 const EditProduct = ({ params }) => {
+  //const { data: session } = useSession();
   const router = useRouter();
 
   const { product, isProductLoading, isProductError } = useProduct(
@@ -34,7 +36,9 @@ const EditProduct = ({ params }) => {
     }
   }, [product]);
 
-  const { owner, isOwnerLoading, isOwnerError } = useOwner(1);
+  const { owner, isOwnerLoading, isOwnerError } =
+    useOwner();
+    //session.user.ownerID
   const [isUploading, setIsUploading] = useState(false);
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [showUploadStatus, setShowUploadStatus] = useState(false);

@@ -26,7 +26,7 @@ const BarChart = ({ graphData }) => {
     const context = chartRef.current.getContext("2d");
 
     const newChart = new Chart(context, {
-      type: "bar",
+      type: "line",
       data: {
         //labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
         labels: xAxisArray,
@@ -50,11 +50,11 @@ const BarChart = ({ graphData }) => {
         ],
       },
       options: {
-        indexAxis: "y",
+        indexAxis: "x",
         responsive: true,
         maintainAspectRatio: true,
         scales: {
-          y: {
+          x: {
             type: "category",
             ticks: {
               //maxRotation: 50,
@@ -64,7 +64,7 @@ const BarChart = ({ graphData }) => {
               fontSize: 8,
             },
           },
-          x: {
+          y: {
             beginAtZero: true,
             ticks: {
               //maxRotation: 50,

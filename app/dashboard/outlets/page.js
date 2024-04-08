@@ -8,8 +8,10 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import OutletModifyModal from "@/components/Dashboard/DashboardOutlets/OutletModification/OutletModifyModal";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 export default function Outlets() {
+  //const { data: session } = useSession();
   const searchParams = useSearchParams();
   const outletFilterQuery = searchParams.get("outletCompany");
   const initialOutletFilter = outletFilterQuery
@@ -22,7 +24,7 @@ export default function Outlets() {
     isOwnerLoading,
     isOwnerError,
     isOwnerValidating,
-  } = useOwner(1);
+  } = useOwner(/*session.user.ownerID*/);
   const [selectedCompany, setSelectedCompany] = useState(initialOutletFilter);
   const [selectedOutlet, setSelectedOutlet] = useState(null);
   const [selectedOutletCompany, setSelectedOutletCompany] = useState(null);
@@ -196,9 +198,10 @@ export default function Outlets() {
               (company) =>
                 selectedCompany === -1 || company.companyID === selectedCompany
             )
-            .map((company) => (
+            .map((company, index) => (
               <OutletCollection
                 key={company.companyID}
+                index={index}
                 companyInfo={company}
                 isValidatingData={isOwnerValidating}
                 editOutletCallback={Callback_Modal_Edit_OnOpen}

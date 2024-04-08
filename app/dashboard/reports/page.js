@@ -4,13 +4,12 @@ import ReportsCompanySelector from "@/components/Dashboard/DashboardReports/Repo
 import ReportsTable from "@/components/Dashboard/DashboardReports/ReportsTable";
 import useOwner from "@/hooks/useOwner";
 import { PresentationChartLineIcon } from "@heroicons/react/24/solid";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
-import DataTable from "react-data-table-component";
 
 export default function Reports() {
-  const { owner, isOwnerLoading, isOwnerError } = useOwner(1);
-  //const [selectedCompany, setSelectedCompany] = useState(-1); //-1 for All
-  const [selectedCompany, setSelectedCompany] = useState(102); //-1 for All
+  const { owner, isOwnerLoading, isOwnerError } = useOwner();
+  const [selectedCompany, setSelectedCompany] = useState(-1); //-1 for All
 
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">
@@ -72,8 +71,12 @@ export default function Reports() {
               (company) =>
                 selectedCompany === -1 || company.companyID === selectedCompany
             )
-            .map((company) => (
-              <ReportsTable key={company.companyID} companyInfo={company} />
+            .map((company, index) => (
+              <ReportsTable
+                key={company.companyID}
+                index={index}
+                companyInfo={company}
+              />
             ))}
         </section>
       )}

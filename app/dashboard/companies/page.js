@@ -3,9 +3,13 @@ import DashPageHeader from "@/components/Dashboard/DashPageHeader";
 import CompanyList from "@/components/Dashboard/DashboardCompanies/CompanyList";
 import useOwner from "@/hooks/useOwner";
 import { BuildingOffice2Icon } from "@heroicons/react/24/solid";
+import { useSession } from "next-auth/react";
 
 export default function Companies() {
-  const { owner, isOwnerLoading, isOwnerError } = useOwner(1);
+  //const { data: session } = useSession();
+  const { owner, isOwnerLoading, isOwnerError } =
+    useOwner();
+    //session.user.ownerID
 
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">

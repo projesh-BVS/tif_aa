@@ -1,12 +1,22 @@
 import { fetcher_AllCompanies, fetcher_Owner } from "@/libs/fetcher";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
-export function useAllProducts(ownerID) {
+export function useAllProducts(id = 0, useSessionData = true) {
+  const { data: session } = useSession({ required: true });
+  const [ownerID, setOwnerID] = useState(null);
+
+  useEffect(() => {
+    if (session?.user) setOwnerID(session.user.ownerID);
+  });
+
   const {
     data: ownerData,
     error: ownerError,
     isLoading: isOwnerLoading,
-  } = useSWR(ownerID, fetcher_Owner);
+  } = useSWR(useSessionData ? ownerID : id, fetcher_Owner);
+
   const {
     data: allCompaniesData,
     error: allCompaniesError,
