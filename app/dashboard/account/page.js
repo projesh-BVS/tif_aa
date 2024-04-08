@@ -8,14 +8,14 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 export default function Account() {
-  const { data: session } = useSession();
+  //const { data: session } = useSession();
   const {
     owner,
     ownerMutate,
     isOwnerLoading,
     isOwnerError,
     isOwnerValidating,
-  } = useOwner(session.user.ownerID);
+  } = useOwner(/*session.user.ownerID*/);
   const [openModal_AccPhoto, setOpenModal_AccPhoto] = useState(false);
   const [openModal_AccInfo, setOpenModal_AccInfo] = useState(false);
   const [openModal_AccPass, setOpenModal_AccPass] = useState(false);
