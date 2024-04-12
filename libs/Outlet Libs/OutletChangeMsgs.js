@@ -40,10 +40,18 @@ const msg_Outlet_Delete_Success = {
   ButtonText: "Close",
 };
 
-const msg_Outlet_Delete_Failure = {
+const msg_Outlet_Delete_Failure_API = {
   Type: "Error",
   Title: "Error",
   Description: "Failed to delete outlet! Please try again",
+  ButtonText: "Close",
+};
+
+const msg_Outlet_Delete_Failure_Product = {
+  Type: "Error",
+  Title: "Error",
+  Description:
+    "Cannot delete outlet as existing product(s) are using this outlet! Please update product(s) to use other outlets before trying again",
   ButtonText: "Close",
 };
 
@@ -55,8 +63,12 @@ export function GetOutletChangeMsg_Update(isSuccess) {
   return isSuccess ? msg_Outlet_Update_Success : msg_Outlet_Update_Failure;
 }
 
-export function GetOutletChangeMsg_Delete(isSuccess) {
-  return isSuccess ? msg_Outlet_Delete_Success : msg_Outlet_Delete_Failure;
+export function GetOutletChangeMsg_Delete(isSuccess, errorMode = "") {
+  return isSuccess
+    ? msg_Outlet_Delete_Success
+    : errorMode == "API"
+    ? msg_Outlet_Delete_Failure_API
+    : msg_Outlet_Delete_Failure_Product;
 }
 
 export function GetOutletChangePrompt_Delete() {

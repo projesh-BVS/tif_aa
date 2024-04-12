@@ -28,7 +28,7 @@ const ReportsTable = ({ index, companyInfo }) => {
         </section>
       )}
 
-      {analytics && analytics.data.length == 0 && (
+      {analytics && analytics.data && analytics.data.length == 0 && (
         <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-red-500">
           <span className="font-semibold lg:text-xl">
             Sorry, there was an error while loading data
@@ -50,22 +50,25 @@ const ReportsTable = ({ index, companyInfo }) => {
         </section>
       )}
 
-      {analytics && analytics.data.length > 0 && !isAnalyticsError && (
-        <section className="flex flex-col w-full items-center justify-center overflow-auto">
-          <ReportsTableHeader
-            companyInfo={companyInfo}
-            initialViewMode={reportViewMode}
-            OnViewModeChangeCallback={Callback_OnViewModeChange}
-          />
-          {reportViewMode === 1 && (
-            <ReportsTableContent analyticsInfo={analytics.data} />
-          )}
+      {analytics &&
+        analytics.data &&
+        analytics.data.length > 0 &&
+        !isAnalyticsError && (
+          <section className="flex flex-col w-full items-center justify-center overflow-auto">
+            <ReportsTableHeader
+              companyInfo={companyInfo}
+              initialViewMode={reportViewMode}
+              OnViewModeChangeCallback={Callback_OnViewModeChange}
+            />
+            {reportViewMode === 1 && (
+              <ReportsTableContent analyticsInfo={analytics.data} />
+            )}
 
-          {reportViewMode === 0 && (
-            <ReportsGraphsContent analyticsInfo={analytics.data} />
-          )}
-        </section>
-      )}
+            {reportViewMode === 0 && (
+              <ReportsGraphsContent analyticsInfo={analytics.data} />
+            )}
+          </section>
+        )}
     </section>
   );
 };

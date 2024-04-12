@@ -2,7 +2,7 @@ import { EyeIcon, PencilSquareIcon, UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
 
-const OwnerCollectionHeader = ({ index, ownerInfo }) => {
+const OwnerCollectionHeader = ({ index, ownerInfo, editOwnerCallback }) => {
   return (
     <section className="relative flex flex-row py-2 px-4 gap-2 items-center justify-between w-full max-w-full text-white bg-gradient-to-br from-tif-blue to-tif-pink">
       <div className="flex items-center justify-start gap-4 w-full">
@@ -41,7 +41,8 @@ const OwnerCollectionHeader = ({ index, ownerInfo }) => {
           <EyeIcon className="w-5 h-5" />
         </Link>
         <button
-          disabled={true}
+          disabled={false}
+          onClick={() => editOwnerCallback(ownerInfo)}
           className="flex items-center justify-center h-full aspect-square disabled:pointer-events-none disabled:bg-yellow-400/40 bg-yellow-400 hover:bg-yellow-500 hover:shadow-md text-white rounded-lg transition-all"
         >
           <PencilSquareIcon className="w-5 h-5" />

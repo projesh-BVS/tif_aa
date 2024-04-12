@@ -152,16 +152,24 @@ const OutletModifyModal = ({
             showLogs
           );
           setStatusNotificationContent(GetOutletChangeMsg_Delete(true));
+        } else if (response.status === 204) {
+          console.log(
+            "Cannot Delete Outlet, Items exist | Response: " +
+              JSON.stringify(response)
+          );
+          setStatusNotificationContent(
+            GetOutletChangeMsg_Delete(false, "PRODUCT")
+          );
         } else {
           Log(
             "Delete Outlet Failed | Response: " + JSON.stringify(response),
             showLogs
           );
-          setStatusNotificationContent(GetOutletChangeMsg_Delete(false));
+          setStatusNotificationContent(GetOutletChangeMsg_Delete(false, "API"));
         }
       } catch (err) {
         Log("Delete Outlet Failed | Error: " + JSON.stringify(err), showLogs);
-        setStatusNotificationContent(GetOutletChangeMsg_Delete(false));
+        setStatusNotificationContent(GetOutletChangeMsg_Delete(false, "API"));
       }
       setIsUploadingData(false);
       setShowStatusNotification(true);

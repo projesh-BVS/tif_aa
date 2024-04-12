@@ -6,18 +6,23 @@ import OwnerInfoSelector from "@/components/Dashboard/DashboardOwners/OwnerInfor
 import OwnerProductInfoList from "@/components/Dashboard/DashboardOwners/OwnerInformation/OwnerProductInfoList";
 import { useAllProducts } from "@/hooks/useAllProducts";
 import useOwner from "@/hooks/useOwner";
+import axios from "axios";
 import {
   BuildingOffice2Icon,
   ShoppingBagIcon,
   UserIcon,
 } from "@heroicons/react/24/solid";
 import { useState } from "react";
+import OwnerCompModifyModal from "@/components/Dashboard/DashboardOwners/OwnerCompModification/OwnerCompModifyModal";
 
 const OwnerView = ({ params }) => {
-  const { owner, isOwnerLoading, isOwnerError } = useOwner(
-    params.ownerID,
-    false
-  );
+  const {
+    owner,
+    ownerMutate,
+    isOwnerLoading,
+    isOwnerError,
+    isOwnerValidating,
+  } = useOwner(params.ownerID, false);
 
   const { companies, products, isAllProductsLoading, isAllProductsError } =
     useAllProducts(params.ownerID, false);
@@ -27,6 +32,7 @@ const OwnerView = ({ params }) => {
   const [searchQueryProduct, setSearchQueryProduct] = useState("");
   const [filterCompanyID, setFilterCompanyID] = useState(-1);
   const [filterOutletID, setFilterOutletID] = useState(-1);
+  const [openAddModal, setOpenAddModal] = useState(false);
 
   const infoTabs = [
     {
@@ -62,6 +68,55 @@ const OwnerView = ({ params }) => {
   function Callback_Filter_Outlet(id) {
     setFilterOutletID(id);
   }
+
+  function Callback_Modal_Add_OnOpen() {
+    setOpenAddModal(true);
+  }
+
+  function Callback_Modal_Add_OnClose_Normal() {
+    setOpenAddModal(false);
+  }
+
+  function Callback_Modal_Add_OnClose_Notification() {
+    setOpenAddModal(false);
+    ownerMutate();
+  }
+
+  /* FOR TESTING */
+  const HandleSubmit_Add = async (event) => {
+    console.log("Initiating submitting outlet add");
+
+    let apiData = {
+      companyName: "Test Company",
+      companyAddress: "123, Main Street, India",
+      ownerID: 1712723423723,
+    };
+
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "https://0zwhtezm4f.execute-api.ap-south-1.amazonaws.com/TryItFirst/company",
+        apiData
+      );
+
+      if (response.status === 200) {
+        console.log(
+          "Add Company Successful | Response: " + JSON.stringify(response)
+        );
+        //setStatusNotificationContent(GetOutletChangeMsg_Upload(true));
+      } else {
+        console.log("Add Company Failed | " + JSON.stringify(response));
+        //setStatusNotificationContent(GetOutletChangeMsg_Upload(false));
+      }
+    } catch (err) {
+      console.log("Add Company Failed in catch | " + JSON.stringify(err));
+      //setStatusNotificationContent(GetOutletChangeMsg_Upload(false));
+    }
+    //setIsUploadingData(false);
+    //setShowStatusNotification(true);
+  };
+  /* END TESTING */
 
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">
@@ -102,6 +157,20 @@ const OwnerView = ({ params }) => {
         !isAllProductsLoading &&
         !isAllProductsError && (
           <section className="flex flex-col px-6 gap-4 -mt-6 w-full items-center justify-center">
+            <OwnerCompModifyModal
+              doOpen={openAddModal}
+              modalMode="Add"
+              showLogs={true}
+              companyInfo={{
+                companyName: "",
+                companyAddress: "",
+                ownerID: parseInt(params.ownerID),
+              }}
+              callback_OnClose_Normal={Callback_Modal_Add_OnClose_Normal}
+              callback_OnClose_Notification={
+                Callback_Modal_Add_OnClose_Notification
+              }
+            />
             <OwnerAccInfoCard ownerInfo={owner.ownerDetails[0]} />
             <OwnerInfoSelector
               infoTabs={infoTabs}
@@ -111,6 +180,7 @@ const OwnerView = ({ params }) => {
               callback_SearchStringProduct={Callback_SearchStringProduct}
               callback_FilterCompany={Callback_Filter_Company}
               callback_FilterOutlet={Callback_Filter_Outlet}
+              callback_AddCompany={Callback_Modal_Add_OnOpen}
             />
           </section>
         )}

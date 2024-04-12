@@ -15,6 +15,7 @@ const OwnerInfoSelector = ({
   callback_SearchStringProduct,
   callback_FilterCompany,
   callback_FilterOutlet,
+  callback_AddCompany,
 }) => {
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -65,6 +66,7 @@ const OwnerInfoSelector = ({
         {infoTabs[selectedTab].tabName == "Companies" && (
           <FiltersOwnerCompanies
             callback_Search={callback_SearchStringCompany}
+            callback_AddCompany={callback_AddCompany}
           />
         )}
 
@@ -83,7 +85,7 @@ const OwnerInfoSelector = ({
 
 export default OwnerInfoSelector;
 
-const FiltersOwnerCompanies = ({ callback_Search }) => {
+const FiltersOwnerCompanies = ({ callback_Search, callback_AddCompany }) => {
   return (
     <div className="flex flex-col md:flex-row items-center justify-between gap-2 w-full">
       <OwnerSearchSelector
@@ -95,15 +97,16 @@ const FiltersOwnerCompanies = ({ callback_Search }) => {
         callback_SearchString={callback_Search}
       />
 
-      <Link href={""} className="w-full md:w-auto pointer-events-none">
+      <div className="w-full md:w-auto">
         <button
-          disabled={true}
+          disabled={false}
+          onClick={callback_AddCompany}
           className="flex pl-2 pr-4 w-full md:w-auto items-center justify-center gap-4 h-10 rounded-lg text-md text-white disabled:pointer-events-none disabled:bg-tif-blue/40 bg-tif-blue hover:bg-tif-lavender hover:shadow-md whitespace-nowrap transition-all"
         >
           <PlusIcon className="h-6 w-6" />
           <h1 className="font-semibold text-md">Add Company</h1>
         </button>
-      </Link>
+      </div>
     </div>
   );
 };

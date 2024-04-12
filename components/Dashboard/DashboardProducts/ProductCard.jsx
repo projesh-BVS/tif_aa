@@ -10,7 +10,7 @@ const ProductCard = ({ index, productInfo, display3D = false }) => {
   return (
     <section
       className={`animate-appearSpringed flex flex-col bg-white rounded-xl shadow-lg`}
-      style={{ animationDelay: `${index * 100}ms` }}
+      style={{ animationDelay: `${index * 50 <= 1000 ? index * 50 : 1050}ms` }}
     >
       <div
         id="card"

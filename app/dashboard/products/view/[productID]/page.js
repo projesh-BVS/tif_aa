@@ -1,5 +1,7 @@
 "use client";
+import LoadingIndicator from "@/components/Common/LoadingIndicator";
 import DashPageHeader from "@/components/Dashboard/DashPageHeader";
+import useCompany from "@/hooks/useCompany";
 import useProduct from "@/hooks/useProduct";
 import MagentoClipboardCopy from "@/libs/Common Libs/MagentoClipboardCopy";
 import { getFormattedPrice } from "@/utils/productInfoUtils";
@@ -15,12 +17,28 @@ const ProductView = ({ params }) => {
   const { product, isProductLoading, isProductError } = useProduct(
     params.productID
   );
+  const { company, isCompanyLoading, isCompanyError } = useCompany(
+    product ? product.data.companyID : null
+  );
   const [showVariantSelector, setShowVariantSelector] = useState(false);
-  //console.log(product);
 
   let modelViewerVariants = null;
   let modelVariantNames = null;
   let select = null;
+
+  useEffect(() => {
+    // This is where we will initialize Model Viewer.
+    // We'll do this asynchronously because it's a heavy operation.
+    import("@google/model-viewer")
+      .then(({ ModelViewerElement }) => {
+        // Here, ModelViewerElement is now available and can be used.
+        customElements.get("model-viewer") ||
+          customElements.define("model-viewer", ModelViewerElement);
+      })
+      .catch((error) => {
+        console.error("Error loading Model Viewer", error);
+      });
+  }, []); // We pass an empty dependency array so this runs once on mount.
 
   useEffect(() => {
     //console.log("PRODUCT DATA UPDATED");
@@ -176,53 +194,72 @@ const ProductView = ({ params }) => {
             </div>
           </div>
 
-          {/*<div className="flex flex-col w-full bg-gradient-to-br from-tif-blue to-tif-pink font-semibold text-white rounded-lg overflow-clip shadow-md">
-            <div className="flex p-2 w-full h-14 items-center justify-between">
-              <div className="flex items-center justify-start w-full gap-2">
-                <InformationCircleIcon className="w-6 h-6" />
-                <h1 className="w-full">Additional Info</h1>
+          {
+            <div className="flex flex-col w-full bg-gradient-to-br from-tif-blue to-tif-pink font-semibold text-white rounded-lg overflow-clip shadow-md">
+              <div className="flex p-2 w-full h-14 items-center justify-between">
+                <div className="flex items-center justify-start w-full gap-2">
+                  <InformationCircleIcon className="w-6 h-6" />
+                  <h1 className="w-full">Additional Info</h1>
+                </div>
               </div>
-            </div>
 
-            <div className="flex flex-col w-full text-slate-600 bg-white font-normal">
-              <div className="flex w-full items-center justify-between border-b-2">
-                <h1 className="w-1/2 p-4 border-r-2">
-                  <span>ID - </span>
-                  {product.data.productID}
-                </h1>
-                <h1 className="w-1/2 p-4">
-                  <span>SKU - </span>
-                  {product.data.productSKU
-                    ? product.data.productSKU
-                    : "Server Error"}
-                </h1>
-              </div>
-              <div className="flex w-full items-center justify-between border-b-2">
-                <h1 className="w-full p-4">
-                  <span>Company - </span>
-                  {product.data.productSKU
-                    ? product.data.productSKU
-                    : "Server Error"}
-                </h1>
-              </div>
-              <div className="flex w-full items-center justify-between  border-b-2">
-                <h1 className="w-full p-4">
-                  <span>Outlets - </span>
-                  {product.data.productSKU
-                    ? product.data.productSKU
-                    : "Server Error"}
-                </h1>
-              </div>
-              <div className="flex w-full items-center justify-between">
-                <h1 className="w-full p-4">
-                  <span>Category - </span>
-                  {product.data.productSKU
-                    ? product.data.productSKU
-                    : "Server Error"}
-                </h1>
+              <div className="flex flex-col w-full text-slate-600 bg-white font-normal">
+                <div className="flex w-full items-center justify-between border-b-2">
+                  <h1 className="w-1/2 p-4 border-r-2">
+                    <span className="font-semibold">ID - </span>
+                    {product.data.productID}
+                  </h1>
+                  <h1 className="w-1/2 p-4">
+                    <span className="font-semibold">SKU - </span>
+                    {product.data.productSKU
+                      ? product.data.productSKU
+                      : "Server Error"}
+                  </h1>
+                </div>
+                <div className="flex w-full items-center justify-between border-b-2">
+                  {isCompanyLoading && (
+                    <div className="p-4">
+                      <LoadingIndicator />
+                    </div>
+                  )}
+                  {!isCompanyLoading && company.company && (
+                    <h1 className="w-full p-4">
+                      <span className="font-semibold">Company - </span>
+                      {company?.company[0]?.companyName
+                        ? company.company[0].companyName
+                        : "Server Error"}
+                    </h1>
+                  )}
+                </div>
+                <div className="flex w-full items-center justify-between border-b-2">
+                  {isCompanyLoading && (
+                    <div className="p-4">
+                      <LoadingIndicator />
+                    </div>
+                  )}
+                  {!isCompanyLoading && (
+                    <h1 className="w-full p-4">
+                      <span className="font-semibold">Outlets - </span>
+                      {company?.outletList
+                        ? GetOutletNames(
+                            product.data.outletIDs,
+                            company.outletList
+                          )
+                        : "Server Error"}
+                    </h1>
+                  )}
+                </div>
+                <div className="flex w-full items-center justify-between">
+                  <h1 className="w-full p-4">
+                    <span className="font-semibold">Category - </span>
+                    {product.data.category
+                      ? product.data.category
+                      : "Server Error"}
+                  </h1>
+                </div>
               </div>
             </div>
-          </div>*/}
+          }
 
           <div className="flex flex-col w-full bg-gradient-to-br from-tif-blue to-tif-pink font-semibold text-white rounded-lg overflow-clip shadow-md">
             <div className="flex p-2 w-full h-14 items-center justify-between">
@@ -258,3 +295,21 @@ const ProductView = ({ params }) => {
 };
 
 export default ProductView;
+
+function GetOutletNames(productOutletIDs, outletList) {
+  let outletNames = [];
+
+  for (let outletID of productOutletIDs) {
+    const outlet = outletList.find((outlet) => outlet.outletID === outletID);
+
+    if (outlet) {
+      outletNames.push(outlet.outletName);
+    }
+  }
+
+  for (let i = 0; i < outletNames.length - 1; i++) {
+    outletNames[i] = outletNames[i] + ", ";
+  }
+
+  return outletNames;
+}

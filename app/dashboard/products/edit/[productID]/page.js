@@ -36,9 +36,8 @@ const EditProduct = ({ params }) => {
     }
   }, [product]);
 
-  const { owner, isOwnerLoading, isOwnerError } =
-    useOwner();
-    //session.user.ownerID
+  const { owner, isOwnerLoading, isOwnerError } = useOwner();
+  //session.user.ownerID
   const [isUploading, setIsUploading] = useState(false);
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [showUploadStatus, setShowUploadStatus] = useState(false);
@@ -93,6 +92,7 @@ const EditProduct = ({ params }) => {
     companyID: "",
     outletIDs: "",
     productID: 1698810128507,
+    productSKU: null,
     productName: "",
     description: "",
     price: "",

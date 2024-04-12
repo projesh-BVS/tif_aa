@@ -13,14 +13,18 @@ const useAllOwners = () => {
 
   const {
     data: superAdminData,
+    mutate: superAdminMutate,
     error: superAdminError,
     isLoading: isSuperAdminLoading,
+    isValidating: isSuperAdminValidating,
   } = useSWR(ownerID, fetcher_Owner);
 
   const {
     data: allOwnersData,
+    mutate: allOwnersMutate,
     error: allOwnersError,
     isLoading: isOwnersLoading,
+    isValidating: isOwnersValidating,
   } = useSWR(
     () =>
       superAdminData
@@ -38,8 +42,10 @@ const useAllOwners = () => {
 
   return {
     allOwners: allOwnersData,
+    allOwnersMutate: allOwnersMutate,
     isAllOwnersLoading: isLoading,
     isAllOwnersError,
+    isAllOwnersValidating: isOwnersValidating,
   };
 };
 
