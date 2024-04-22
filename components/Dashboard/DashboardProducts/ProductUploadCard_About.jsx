@@ -11,9 +11,6 @@ const ProductUploadCard_About = ({
   fieldsData = null,
 }) => {
   var formattedCompanyList = GetFormattedCompanies(companyList);
-  /*const [currSelectedCompany, setCurrSelectedCompany] = useState(
-    formattedCompanyList[0]
-  );*/
 
   const [currSelectedCompany, setCurrSelectedCompany] = useState(
     fieldsData === null
@@ -42,39 +39,21 @@ const ProductUploadCard_About = ({
     )
   );
 
-  /*const [currSelectedOutlet, setCurrSelectedOutlet] =
-    useState(formattedOutletList);*/
-
   useEffect(() => {
-    // console.log("Setting initial company ")
     handleDropdown("companyID", currSelectedCompany.id);
   }, [currSelectedCompany]);
 
   useEffect(() => {
-    // console.log("Setting initial category ")
     handleDropdown("category", currSelectedCategory.display);
   }, [currSelectedCategory]);
 
   useEffect(() => {
-    //console.log("Setting initial outlet")
     let outletIDsArray = [];
     for (let i = 0; i < currSelectedOutlet.length; i++) {
       outletIDsArray.push(currSelectedOutlet[i].id);
     }
     handleDropdown("outletIDs", outletIDsArray);
   }, [currSelectedOutlet]);
-
-  /*useEffect(() => {  
-  if(fieldsData!= null){
-    //for company
-    formattedCompanyList.forEach(company => {
-      if(company.id == fieldsData.companyID)
-      {
-        setCurrSelectedCompany(company);
-      }
-    });
-    //for category
-  }}, [fieldsData]);*/
 
   return (
     <section className="flex flex-col gap-2 items-center justify-between w-full rounded-2xl shadow-md bg-white overflow-clip">

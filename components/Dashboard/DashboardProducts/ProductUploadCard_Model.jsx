@@ -26,6 +26,8 @@ const ProductUploadCard_Model = ({ handleFile, fieldsData = null }) => {
   const [glbFile, setGLBFile] = useState(null);
   const [usdzFile, setUSDZFile] = useState(null);
   const [posterFile, setPosterFile] = useState(null);
+  const [statusIsUploading, setStatusIsUploading] = useState(false);
+  const [currentUploadingCardName, setCurrentUploadingCardName] = useState("");
 
   useEffect(() => {
     if (fieldsData != null) {
@@ -57,6 +59,11 @@ const ProductUploadCard_Model = ({ handleFile, fieldsData = null }) => {
     }
   };
 
+  function callback_IsUploading(isUploading, displayName) {
+    setStatusIsUploading(isUploading);
+    setCurrentUploadingCardName(displayName);
+  }
+
   return (
     <section className="flex flex-col md:flex-row gap-2 items-center justify-between w-full">
       <div className="grid grid-cols-3 xl:grid-cols-4 h-auto gap-4 w-full">
@@ -70,18 +77,27 @@ const ProductUploadCard_Model = ({ handleFile, fieldsData = null }) => {
           fileTypes={["glb", "gltf"]}
           fileSelectedCallback={fileSelected}
           handleFile={handleFile}
+          isUploadingCallback={callback_IsUploading}
+          statusIsUploading={statusIsUploading}
+          uploadingCardName={currentUploadingCardName}
         />
         <FileUploadCard
           displayName={"USDZ"}
           fileTypes={["usdz"]}
           fileSelectedCallback={fileSelected}
           handleFile={handleFile}
+          isUploadingCallback={callback_IsUploading}
+          statusIsUploading={statusIsUploading}
+          uploadingCardName={currentUploadingCardName}
         />
         <FileUploadCard
           displayName={"Poster"}
           fileTypes={["png", "webp"]}
           fileSelectedCallback={fileSelected}
           handleFile={handleFile}
+          isUploadingCallback={callback_IsUploading}
+          statusIsUploading={statusIsUploading}
+          uploadingCardName={currentUploadingCardName}
         />
       </div>
     </section>
@@ -181,6 +197,9 @@ export function FileUploadCard({
   displayName,
   fileTypes,
   fileSelectedCallback,
+  isUploadingCallback,
+  statusIsUploading,
+  uploadingCardName,
   handleFile,
 }) {
   const [file, setFile] = useState(null);
@@ -188,6 +207,8 @@ export function FileUploadCard({
   const [isUploadError, setUploadError] = useState(false);
   const [isInDropZone, setIsInDropZone] = useState(false);
   const [uploadPercent, setUploadPercent] = useState(0);
+
+  const isCardDisabled = statusIsUploading && uploadingCardName != displayName;
 
   const handleChange = (file) => {
     setFile(file);
@@ -211,6 +232,8 @@ export function FileUploadCard({
     fileType,
     precentageCallback
   ) => {
+    if (isUploadingCallback) isUploadingCallback(true, displayName);
+
     const options = {
       headers: { "Content-Type": "image/png" },
       onUploadProgress: (progressEvent) => {
@@ -268,111 +291,128 @@ export function FileUploadCard({
     } else {
       setUploadError(true);
     }
+    if (isUploadingCallback) isUploadingCallback(false, displayName);
   };
 
   return (
-    <FileUploader
-      types={fileTypes}
-      multiple={false}
-      handleChange={handleChange}
-      onTypeError={handleTypeError}
-      onDraggingStateChange={handleDragStateChange}
-      hoverTitle={"Drop " + displayName + " Here"}
-      dropMessageStyle={{
-        backgroundColor: "transparent",
-        borderRadius: 0,
-        borderWidth: 0,
-        fontWeight: 900,
-        fontSize: 1.25 + "rem",
-        textTransform: "capitalize",
-        color: "rgb(50 50 50 / 1.0)",
-      }}
-    >
-      <div className={"w-full h-full"}>
-        <button
-          className={`hidden lg:flex flex-col p-4 gap-6 w-full h-full items-center justify-center rounded-2xl border-2 border-tif-lavender border-dashed hover:bg-tif-blue/20 hover:shadow-md transition-all ${
-            isInDropZone ? "bg-tif-blue/20 shadow-md" : ""
-          } ${isTypeError || isUploadError ? "bg-red-100" : ""} ${
-            file && !isUploadError ? "bg-green-100" : ""
-          }`}
+    <>
+      {!isCardDisabled && (
+        <FileUploader
+          types={fileTypes}
+          multiple={false}
+          handleChange={handleChange}
+          onTypeError={handleTypeError}
+          onDraggingStateChange={handleDragStateChange}
+          hoverTitle={"Drop " + displayName + " Here"}
+          dropMessageStyle={{
+            backgroundColor: "transparent",
+            borderRadius: 0,
+            borderWidth: 0,
+            fontWeight: 900,
+            fontSize: 1.25 + "rem",
+            textTransform: "capitalize",
+            color: "rgb(50 50 50 / 1.0)",
+          }}
         >
-          <div
-            className={`flex items-center justify-center px-4 py-2 gap-4 text-white bg-gradient-to-br from-tif-blue to-tif-pink rounded-xl shadow-md ${
-              isInDropZone ? "blur" : "blur-none bgt"
-            }`}
-          >
-            <CloudArrowUpIcon width={32} />
-            <h1 className="font-black text-xl uppercase">{displayName}</h1>
+          <div className={"w-full h-full"}>
+            <button
+              className={`hidden lg:flex flex-col p-4 gap-6 w-full h-full items-center justify-center rounded-2xl border-2 border-tif-lavender border-dashed hover:bg-tif-blue/20 hover:shadow-md transition-all ${
+                isInDropZone ? "bg-tif-blue/20 shadow-md" : ""
+              } ${isTypeError || isUploadError ? "bg-red-100" : ""} ${
+                file && !isUploadError ? "bg-green-100" : ""
+              }`}
+            >
+              <div
+                className={`flex items-center justify-center px-4 py-2 gap-4 text-white bg-gradient-to-br from-tif-blue to-tif-pink rounded-xl shadow-md ${
+                  isInDropZone ? "blur" : "blur-none bgt"
+                }`}
+              >
+                <CloudArrowUpIcon width={32} />
+                <h1 className="font-black text-xl uppercase">{displayName}</h1>
+              </div>
+              <h1
+                className={`font-semibold  text-sm text-center text-tif-lavender leading-snug ${
+                  isInDropZone ? "blur" : "blur-none"
+                } ${isTypeError || isUploadError ? "hidden" : ""} ${
+                  file ? "hidden" : ""
+                }`}
+              >
+                Drag & Drop
+                <br />
+                - or -
+                <br />
+                Click To Upload File
+              </h1>
+              <ProgressBar
+                progressPercent={uploadPercent}
+                doShow={uploadPercent > 0 && uploadPercent < 100}
+              />
+              <h1
+                className={`px-2 w-full font-semibold text-tif-lavender truncate ${
+                  file && !isUploadError ? "" : "hidden"
+                }`}
+              >
+                {file ? file.name : ""}
+                <br />
+                {file ? (file.size / 1024 / 1024).toFixed(2) + " MB" : ""}
+              </h1>
+
+              <h1
+                className={`font-medium text-red-500 ${
+                  isTypeError ? "flex" : "hidden"
+                }`}
+              >
+                Unsupported File Type
+                <br />
+                Please drop a{" "}
+                {fileTypes.map(
+                  (type, index) =>
+                    type +
+                    (fileTypes.length > 1 && index != fileTypes.length - 1
+                      ? " or "
+                      : "")
+                )}{" "}
+                file
+              </h1>
+
+              <h1
+                className={`font-medium text-red-500 ${
+                  isUploadError ? "flex" : "hidden"
+                }`}
+              >
+                Upload Failed! Please try again!
+              </h1>
+            </button>
+
+            <button className="lg:hidden flex w-full h-full items-center justify-center px-4 py-2 gap-4 rounded-xl text-white bg-tif-blue hover:bg-tif-lavender hover:shadow-md transition-all">
+              <CloudArrowUpIcon
+                width={24}
+                className={`${isInDropZone ? "blur" : "blur-none"}`}
+              />
+              <h1
+                className={`font-black text-md uppercase ${
+                  isInDropZone ? "blur" : "blur-none"
+                }`}
+              >
+                {displayName}
+              </h1>
+              <ProgressBar
+                progressPercent={uploadPercent}
+                //doShow={uploadPercent > 0 && uploadPercent < 100}
+                doShow={statusIsUploading && uploadingCardName == displayName}
+              />
+            </button>
           </div>
-          <h1
-            className={`font-semibold  text-sm text-center text-tif-lavender leading-snug ${
-              isInDropZone ? "blur" : "blur-none"
-            } ${isTypeError || isUploadError ? "hidden" : ""} ${
-              file ? "hidden" : ""
-            }`}
-          >
-            Drag & Drop
-            <br />
-            - or -
-            <br />
-            Click To Upload File
-          </h1>
-          <ProgressBar
-            progressPercent={uploadPercent}
-            doShow={uploadPercent > 0 && uploadPercent < 100}
-          />
-          <h1
-            className={`px-2 w-full font-semibold text-tif-lavender truncate ${
-              file && !isUploadError ? "" : "hidden"
-            }`}
-          >
-            {file ? file.name : ""}
-            <br />
-            {file ? (file.size / 1024 / 1024).toFixed(2) + " MB" : ""}
-          </h1>
+        </FileUploader>
+      )}
 
-          <h1
-            className={`font-medium text-red-500 ${
-              isTypeError ? "flex" : "hidden"
-            }`}
-          >
-            Unsupported File Type
-            <br />
-            Please drop a{" "}
-            {fileTypes.map(
-              (type, index) =>
-                type +
-                (fileTypes.length > 1 && index != fileTypes.length - 1
-                  ? " or "
-                  : "")
-            )}{" "}
-            file
-          </h1>
-
-          <h1
-            className={`font-medium text-red-500 ${
-              isUploadError ? "flex" : "hidden"
-            }`}
-          >
-            Upload Failed! Please try again!
-          </h1>
-        </button>
-
-        <button className="lg:hidden flex w-full h-full items-center justify-center px-4 py-2 gap-4 rounded-xl text-white bg-tif-blue hover:bg-tif-lavender hover:shadow-md transition-all">
-          <CloudArrowUpIcon
-            width={24}
-            className={`${isInDropZone ? "blur" : "blur-none"}`}
-          />
-          <h1
-            className={`font-black text-md uppercase ${
-              isInDropZone ? "blur" : "blur-none"
-            }`}
-          >
-            {displayName}
-          </h1>
-        </button>
-      </div>
-    </FileUploader>
+      {isCardDisabled && (
+        <div className="flex flex-col items-center justify-center w-full h-full p-4 bg-red-200 text-red-900 rounded-2xl">
+          <h1>Please wait for</h1>
+          <h1>{uploadingCardName + " to finish uploading"}</h1>
+        </div>
+      )}
+    </>
   );
 }
 
