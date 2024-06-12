@@ -143,7 +143,7 @@ export default function Owners() {
                 key={owner.ownerDetails[0].ownerID}
                 index={index}
                 ownerData={owner}
-                isValidatingData={isAllOwnersValidating}
+                isValidatingData={false}
                 editOwnerCallback={Callback_Modal_Edit_OnOpen}
               />
             ))}

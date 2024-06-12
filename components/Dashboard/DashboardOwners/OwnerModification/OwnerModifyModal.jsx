@@ -4,6 +4,7 @@ import axios from "axios";
 import OwnerModifyForm from "./UI/OwnerModifyForm";
 import {
   GetOwnerMsg_Add,
+  GetOwnerMsg_Custom,
   GetOwnerMsg_Edit,
 } from "@/libs/Owner Libs/OwnerChangeMsgs";
 import OwnerModifyNotification from "./UI/OwnerModifyNotification";
@@ -123,10 +124,17 @@ const OwnerModifyModal = ({
         }
       } catch (err) {
         Log(
-          "Adding Owner Failed in catch | Error: " + JSON.stringify(err),
+          "Adding Owner Failed in catch | Error: " +
+            JSON.stringify(err.response),
           showLogs
         );
-        setStatusNotificationContent(GetOwnerMsg_Add(false));
+        if (err.response.status === 400) {
+          setStatusNotificationContent(
+            GetOwnerMsg_Custom(false, err.response.data.message, "Close")
+          );
+        } else {
+          setStatusNotificationContent(GetOwnerMsg_Add(false));
+        }
       }
 
       setIsUploadingData(false);

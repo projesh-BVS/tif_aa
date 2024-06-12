@@ -46,7 +46,7 @@ const LoginForm = ({
           <div className="flex items-center justify-end w-full">
             <button
               className="text-sm text-tif-blue disabled:text-tif-blue/40"
-              disabled={true}
+              disabled={false}
               onClick={(e) => {
                 e = e || window.event;
                 e.preventDefault();

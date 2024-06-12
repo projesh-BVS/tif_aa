@@ -30,6 +30,16 @@ export function GetOwnerMsg_Add(isSuccess) {
   return isSuccess ? msg_Owner_Add_Success : msg_Owner_Add_Failure;
 }
 
+export function GetOwnerMsg_Custom(isSuccess, msgContent, btnText) {
+  let msgOBJ = {
+    Type: isSuccess ? "Success" : "Error",
+    Title: isSuccess ? "Success" : "Error",
+    Description: msgContent,
+    ButtonText: btnText,
+  };
+  return msgOBJ;
+}
+
 export function GetOwnerMsg_Edit(isSuccess) {
   return isSuccess ? msg_Owner_Edit_Success : msg_Owner_Edit_Failure;
 }
