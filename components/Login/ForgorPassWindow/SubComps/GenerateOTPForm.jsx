@@ -41,7 +41,7 @@ const GenerateOTPForm = ({
     event.preventDefault();
 
     if (isFormValid) {
-      console.log("Checking Mobile Number");
+      console.log("Checking Email");
       //API CALL INITIATES HERE
 
       let apiData = {

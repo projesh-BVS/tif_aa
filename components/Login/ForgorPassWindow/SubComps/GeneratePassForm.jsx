@@ -33,7 +33,10 @@ const GeneratePassForm = ({
     Title: "Success",
     Description: "Your password was updated successfully",
     ButtonText: "Go To Login",
-    ButtonAction: callback_OnSuccess_UpdatePassword,
+    ButtonAction: () => {
+      setShowUpdateNotification(false);
+      callback_OnSuccess_UpdatePassword;
+    },
   };
 
   let notficationContent_Expired = {
