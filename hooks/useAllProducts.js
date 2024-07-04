@@ -27,6 +27,7 @@ export function useAllProducts(id = 0, useSessionData = true) {
   );
 
   const isLoading = isOwnerLoading || isCompaniesLoading;
+
   const isAllProductsError =
     ownerError ||
     allCompaniesError ||

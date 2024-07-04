@@ -1,9 +1,4 @@
-import {
-  BuildingOffice2Icon,
-  ShoppingBagIcon,
-  UserIcon,
-} from "@heroicons/react/24/solid";
-import DashInfoItem from "../DashInfoItem";
+import { UserIcon } from "@heroicons/react/24/solid";
 import Clock from "@/components/Common/Clock";
 import Image from "next/image";
 
@@ -71,21 +66,6 @@ const HomePrimaryInfoCard = ({ ownerData, isOwnerLoading, isOwnerError }) => {
           </div>
         </div>
         <Clock />
-        {/*<div className="flex flex-col md:flex-row gap-1 lg:gap-2 items-center justify-center md:justify-end w-full">
-          <DashInfoItem
-            icon={<BuildingOffice2Icon className="h-7 w-7 lg:h-8 lg:w-8" />}
-            text="Companies"
-            page="/dashboard/companies"
-            count={GetCompanyCount((ownerData = { ownerData }))}
-          />
-          <hr className="text-gray-500" />
-          <DashInfoItem
-            icon={<ShoppingBagIcon className="h-7 w-7 lg:h-8 lg:w-8" />}
-            text="Products"
-            page="/dashboard/products"
-            count={GetProductCount(ownerData)}
-          />
-        </div>*/}
       </section>
     );
   }

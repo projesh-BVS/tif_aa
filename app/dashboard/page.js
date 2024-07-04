@@ -1,6 +1,6 @@
 "use client";
-import DashInfoCard from "@/components/Dashboard/DashInfoCard";
 import DashPageHeader from "@/components/Dashboard/DashPageHeader";
+import HomePluginGuideCard from "@/components/Dashboard/DashboardHome/HomePluginGuideCard";
 import HomePrimaryInfoCard from "@/components/Dashboard/DashboardHome/HomePrimaryInfoCard";
 import HomeSecondaryInfoCard from "@/components/Dashboard/DashboardHome/HomeSecondaryInfoCard";
 import useOwner from "@/hooks/useOwner";
@@ -10,21 +10,9 @@ import {
   HomeIcon,
   ShoppingBagIcon,
 } from "@heroicons/react/24/solid";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 
 export default function Dashboard() {
-  //const [ownerID, setOwnerID] = useState(null);
-
-  //const { data: session } = useSession({ required: true });
-
   const { owner, isOwnerLoading, isOwnerError } = useOwner(1);
-  //const { owner, isOwnerLoading, isOwnerError } = useOwner(session.user.ownerID);
-
-  /*useEffect(() => {
-    if (session?.user) setOwnerID(session.user.ownerID);
-    //console.log(session.user.role);
-  }, [session]);*/
 
   return (
     <main className="flex flex-col gap-6 pb-6 items-center w-full h-full overflow-auto bg-tif-grey">
@@ -33,22 +21,6 @@ export default function Dashboard() {
         text="Dashboard"
         isLoading={isOwnerLoading}
       />
-      {/*
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 -mt-6 px-4 gap-4 w-full">
-          <DashInfoCard
-            icon={<BuildingStorefrontIcon className="w-8 h-8" />}
-            text="Companies"
-            page="/dashboard/companies"
-            count="57"
-          />
-          <DashInfoCard
-            icon={<BuildingStorefrontIcon className="w-8 h-8" />}
-            text="Products"
-            page="/dashboard/products"
-            count="78"
-          />          
-        </section>
-  */}
       <section className="animate-slideInSpringedLeft flex px-6 gap-4 -mt-6 w-full items-center justify-center">
         <HomePrimaryInfoCard
           ownerData={owner}
@@ -106,6 +78,15 @@ export default function Dashboard() {
             />
           </section>
         )}
+
+      {owner && owner.ownerDetails.length > 0 && (
+        <section
+          className="animate-slideInSpringedLeft flex px-6 gap-4 w-full items-center justify-center"
+          style={{ animationDelay: `400ms` }}
+        >
+          <HomePluginGuideCard />
+        </section>
+      )}
     </main>
   );
 }
