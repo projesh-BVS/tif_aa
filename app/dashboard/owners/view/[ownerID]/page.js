@@ -16,7 +16,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import OwnerCompModifyModal from "@/components/Dashboard/DashboardOwners/OwnerCompModification/OwnerCompModifyModal";
-import OwnerSearchSelector from "@/components/Dashboard/DashboardOwners/OwnerSearch/OwnerSearchSelector";
+import SearchSelector from "@/components/Common/Searchbar/SearchSelector";
 import {
   OwnerCompanySelector,
   OwnerOutletSelector,
@@ -258,7 +258,7 @@ const Tab = ({ tabIndex, selectedTabIndex, children }) => {
 const FiltersOwnerCompanies = ({ callback_Search, callback_AddCompany }) => {
   return (
     <div className="flex flex-col md:flex-row items-center justify-between gap-2 w-full">
-      <OwnerSearchSelector
+      <SearchSelector
         isAutoSearch={true}
         fieldID={"owner-company-search"}
         fieldName={"OwnerCompanySearch"}
@@ -317,7 +317,7 @@ const FiltersOwnerProducts = ({
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-between gap-2 w-full">
-      <OwnerSearchSelector
+      <SearchSelector
         isAutoSearch={true}
         fieldID={"owner-product-search"}
         fieldName={"OwnerProductSearch"}

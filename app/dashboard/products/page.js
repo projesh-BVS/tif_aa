@@ -14,6 +14,9 @@ import ProductCard from "@/components/Dashboard/DashboardProducts/ProductCard";
 import { Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
 import ProductPluginModal from "@/components/Dashboard/DashboardProducts/ProductPluginGeneration/ProductPluginModal";
+import SearchSelector from "@/components/Common/Searchbar/SearchSelector";
+import ProductOutletSelector from "@/components/Dashboard/DashboardProducts/ProductOutletSelector";
+import ProductCategorySelector from "@/components/Dashboard/DashboardProducts/ProductCategorySelector";
 
 function Products() {
   useEffect(() => {
@@ -40,9 +43,67 @@ function Products() {
     useAllProducts();
 
   const [selectedCompany, setSelectedCompany] = useState(initialProductFilter);
+  const [filterOutletID, setFilterOutletID] = useState(-1);
+  const [searchQueryProduct, setSearchQueryProduct] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(-1);
+  const [outletData, setOutletData] = useState(
+    GenerateOutletData(initialProductFilter)
+  );
+  const [categoryData, setCategoryData] = useState(
+    GenerateCategoryData(initialProductFilter)
+  );
+
   const [openModal_ProductPlugin, setOpenModal_ProductPlugin] = useState(false);
   const [modalMode_ProductPlugin, setModalMode_ProductPlugin] =
     useState("None");
+
+  function GenerateOutletData(companyID) {
+    if (companyID == -1 || !companies) {
+      return null;
+    } else {
+      for (let i = 0; i < companies.length; i++) {
+        if (companies[i].companyID == companyID) {
+          return [...companies[i].outletList];
+        }
+      }
+    }
+  }
+
+  function GenerateCategoryData(companyID) {
+    if (companyID == -1 || !companies) {
+      return null;
+    } else {
+      let catList = [];
+      for (let i = 0; i < companies.length; i++) {
+        if (companies[i].companyID == companyID) {
+          for (let j = 0; j < companies[i].categories.length; j++) {
+            catList[j] = Object.keys(companies[i].categories[j])[0];
+          }
+          return catList;
+        }
+      }
+    }
+  }
+
+  function HandleChange_Company(companyID) {
+    setSelectedCompany(companyID);
+    setOutletData(GenerateOutletData(companyID));
+    setCategoryData(GenerateCategoryData(companyID));
+    HandleChange_Outlet(-1);
+    HandleChange_Category(-1);
+  }
+
+  function HandleChange_Outlet(outletID) {
+    setFilterOutletID(outletID);
+  }
+
+  function HandleChange_Search(searchString) {
+    setSearchQueryProduct(searchString);
+  }
+
+  function HandleChange_Category(catName) {
+    setSelectedCategory(catName);
+  }
 
   const Callback_Modal_PluginCustomizer_Open = (modalMode) => {
     setModalMode_ProductPlugin(modalMode);
@@ -52,6 +113,11 @@ function Products() {
   const Callback_Modal_PluginCustomizer_Close = () => {
     setOpenModal_ProductPlugin(false);
   };
+
+  useEffect(() => {
+    if (companies) setOutletData(GenerateOutletData(selectedCompany));
+    if (companies) setCategoryData(GenerateCategoryData(selectedCompany));
+  }, [companies]);
 
   return (
     <main className="flex flex-col gap-6 items-center w-full h-full overflow-auto bg-tif-grey">
@@ -89,14 +155,8 @@ function Products() {
             callback_OnClose={Callback_Modal_PluginCustomizer_Close}
           />
 
-          <div className="flex flex-col md:flex-row items-center justify-between w-full p-2 lg:p-4 gap-2 rounded-xl shadow-md bg-white">
-            <ProductCompanySelector
-              companies={companies}
-              selectedCompany={selectedCompany}
-              onChange={setSelectedCompany}
-            />
-
-            <div className="flex flex-col md:flex-row items-center justify-center gap-2 w-full md:w-fit">
+          <div className="relative flex flex-col md:flex-row items-center justify-between w-full gap-2 z-10">
+            <div className="md:absolute md:right-0 md:-top-[4.5rem] flex flex-col md:flex-row items-center justify-center gap-2 w-full md:w-fit p-2 rounded-xl shadow-md bg-white">
               <PluginOptionsBtn
                 Callback_PluginCustomizer_Open={
                   Callback_Modal_PluginCustomizer_Open
@@ -112,6 +172,35 @@ function Products() {
                 </button>
               </Link>
             </div>
+
+            <div className="flex flex-col md:flex-row items-center justify-start gap-2 w-full p-2 lg:p-4 rounded-xl shadow-md bg-white">
+              <SearchSelector
+                isAutoSearch={true}
+                fieldID={"product-search"}
+                fieldName={"ProductSearch"}
+                fieldType={"text"}
+                fieldLabel={"Product Name"}
+                callback_SearchString={HandleChange_Search}
+              />
+
+              <ProductCompanySelector
+                companies={companies}
+                selectedCompany={selectedCompany}
+                onChange={HandleChange_Company}
+              />
+
+              <ProductOutletSelector
+                outlets={outletData}
+                selectedOutlet={filterOutletID}
+                callback_OnChange={HandleChange_Outlet}
+              />
+
+              <ProductCategorySelector
+                categories={categoryData}
+                selectedCategory={selectedCategory}
+                callback_OnChange={HandleChange_Category}
+              />
+            </div>
           </div>
         </section>
       )}
@@ -122,6 +211,20 @@ function Products() {
             .filter(
               (product) =>
                 selectedCompany === -1 || product.companyID === selectedCompany
+            )
+            .filter(
+              (product) =>
+                filterOutletID === -1 ||
+                product.outletIDs.includes(filterOutletID)
+            )
+            .filter((product) =>
+              product.productName
+                .toLowerCase()
+                .includes(searchQueryProduct.toLowerCase())
+            )
+            .filter(
+              (product) =>
+                selectedCategory === -1 || product.category === selectedCategory
             )
             .map((product, index) => (
               <ProductCard

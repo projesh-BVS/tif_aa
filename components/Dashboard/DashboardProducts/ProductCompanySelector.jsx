@@ -1,7 +1,3 @@
-import React from "react";
-import Image from "next/image"; // Import the Next.js Image component
-import { BuildingStorefrontIcon } from "@heroicons/react/24/solid";
-
 function ProductCompanySelector({ companies, selectedCompany, onChange }) {
   return (
     <section className="flex shrink-0 justify-between md:justify-center items-center gap-4 h-10 w-full md:w-auto">

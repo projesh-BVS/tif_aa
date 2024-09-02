@@ -2,10 +2,9 @@
 import DashPageHeader from "@/components/Dashboard/DashPageHeader";
 import OwnerCollection from "@/components/Dashboard/DashboardOwners/OwnerCollection/OwnerCollection";
 import OwnerModifyModal from "@/components/Dashboard/DashboardOwners/OwnerModification/OwnerModifyModal";
-import OwnerSearchSelector from "@/components/Dashboard/DashboardOwners/OwnerSearch/OwnerSearchSelector";
+import SearchSelector from "@/components/Common/Searchbar/SearchSelector";
 import useAllOwners from "@/hooks/useAllOwners";
 import { PlusIcon, UserGroupIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
 import { useState } from "react";
 
 export default function Owners() {
@@ -109,7 +108,7 @@ export default function Owners() {
           />
 
           <div className="flex flex-col md:flex-row items-center justify-between w-full p-2 lg:p-4 gap-2 rounded-xl shadow-md bg-white">
-            <OwnerSearchSelector
+            <SearchSelector
               isAutoSearch={true}
               fieldID={"owner-search"}
               fieldName={"OwnerSearch"}
