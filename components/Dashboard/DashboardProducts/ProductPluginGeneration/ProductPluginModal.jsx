@@ -19,6 +19,7 @@ const ProductPluginModal = ({
   doOpen = false,
   pluginMode,
   companies,
+  products,
   callback_OnClose,
 }) => {
   let [isOpen, setIsOpen] = useState(doOpen);
@@ -56,6 +57,7 @@ const ProductPluginModal = ({
           <ProductPluginWindow
             pluginMode={pluginMode}
             companies={companies}
+            products={products}
             callback_OnClose={CloseModal}
             showLogs={showLogs}
           />
@@ -74,6 +76,7 @@ function Log(logMsg, showLogs = false) {
 const ProductPluginWindow = ({
   pluginMode,
   companies,
+  products,
   callback_OnClose,
   showLogs,
 }) => {
@@ -98,6 +101,7 @@ const ProductPluginWindow = ({
             <PluginWindowBody
               pluginMode={pluginMode}
               companies={companies}
+              products={products}
               showLogs={showLogs}
             />
           </Dialog.Panel>
@@ -138,7 +142,7 @@ const PluginWindowHeader = ({ pluginMode, callback_OnClose, showLogs }) => {
   );
 };
 
-const PluginWindowBody = ({ pluginMode, companies, showLogs }) => {
+const PluginWindowBody = ({ pluginMode, companies, products, showLogs }) => {
   let btnStyle_Default = {
     color_Btn_BG_Normal: "#899CFA",
     color_Btn_BG_Hover: "#8A79FE",
@@ -281,6 +285,7 @@ const PluginWindowBody = ({ pluginMode, companies, showLogs }) => {
 
       <ProductPlugin_CodeConfig
         companies={companies}
+        products={products}
         pluginMode={pluginMode}
         btnStyle={btnStyle_Current}
       />

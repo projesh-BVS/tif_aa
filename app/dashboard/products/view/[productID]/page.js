@@ -261,7 +261,7 @@ const ProductView = ({ params }) => {
             </div>
           }
 
-          <div className="flex flex-col w-full bg-gradient-to-br from-tif-blue to-tif-pink font-semibold text-white rounded-lg overflow-clip shadow-md">
+          {/*<div className="flex flex-col w-full bg-gradient-to-br from-tif-blue to-tif-pink font-semibold text-white rounded-lg overflow-clip shadow-md">
             <div className="flex p-2 w-full h-14 items-center justify-between">
               <div className="flex items-center justify-start w-full gap-2">
                 <CodeBracketIcon className="w-6 h-6" />
@@ -287,7 +287,7 @@ const ProductView = ({ params }) => {
               &environmentImage=https://brandlogo.s3.ap-south-1.amazonaws.com/moon_1k.hdr"
               width="px" height="400px" allow="camera" &gt;&lt;/iframe&gt;
             </code>
-          </div>
+          </div>*/}
         </section>
       )}
     </main>

@@ -151,6 +151,7 @@ function Products() {
           <ProductPluginModal
             doOpen={openModal_ProductPlugin}
             companies={companies}
+            products={products}
             pluginMode={modalMode_ProductPlugin}
             callback_OnClose={Callback_Modal_PluginCustomizer_Close}
           />
