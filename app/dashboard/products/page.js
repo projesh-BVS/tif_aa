@@ -101,7 +101,7 @@ function Products() {
     setSearchQueryProduct(searchString);
   }
 
-  function HandleChange_Category(catName) {
+  function HandleChange_Category(catName) {    
     setSelectedCategory(catName);
   }
 
@@ -225,7 +225,7 @@ function Products() {
             )
             .filter(
               (product) =>
-                selectedCategory === -1 || product.category === selectedCategory
+                selectedCategory === "-1" || selectedCategory === -1 || product.category === selectedCategory
             )
             .map((product, index) => (
               <ProductCard
