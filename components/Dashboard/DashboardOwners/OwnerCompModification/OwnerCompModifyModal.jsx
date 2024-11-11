@@ -15,7 +15,7 @@ const OwnerCompModifyModal = ({
   companyInfo = null,
   callback_OnClose_Normal,
   callback_OnClose_Notification,
-}) => {
+}) => {  
   let [isOpen, setIsOpen] = useState(doOpen);
   const [isUploadingData, setIsUploadingData] = useState(false);
   const [showStatusNotification, setShowStatusNotification] = useState(false);
@@ -32,6 +32,7 @@ const OwnerCompModifyModal = ({
 
   const [editFields, setEditFields] = useState({
     companyID: companyInfo ? companyInfo.companyID : "",
+    companyURL: companyInfo ? companyInfo.companyURL: "",
     companyLogo: companyInfo ? companyInfo.companyLogo : "",
     companyName: companyInfo ? companyInfo.companyName : "",
     companyAddress: companyInfo ? companyInfo.companyAddress : "",
@@ -49,7 +50,7 @@ const OwnerCompModifyModal = ({
           JSON.stringify(companyInfo),
         showLogs
       );
-      if (modalMode == "Add") SetCompanyDataAdd(companyInfo);
+      //if (modalMode == "Add") SetCompanyDataAdd(companyInfo);
       if (modalMode == "Edit") SetCompanyDataEdit(companyInfo);
     }
   }, [companyInfo]);
@@ -73,6 +74,7 @@ const OwnerCompModifyModal = ({
     Log("COMPANY INFO- " + JSON.stringify(companyInfo), showLogs);
     setEditFields({
       companyID: companyInfo ? companyInfo.companyID : "",
+      companyURL: companyInfo ? companyInfo.companyURL : "",
       companyLogo: companyInfo ? companyInfo.companyLogo : "",
       companyName: companyInfo ? companyInfo.companyName : "",
       companyAddress: companyInfo ? companyInfo.companyAddress : "",
@@ -85,7 +87,7 @@ const OwnerCompModifyModal = ({
   const IsFormValid = () => {
     if (modalMode == "Add") {
       Log(
-        "Checking form validity. Form Data - " + Object.values(addFields),
+        "Checking form validity for add. Form Data - " + Object.values(addFields),
         showLogs
       );
       return Object.values(addFields).every((value) => value || value === 0);
@@ -93,7 +95,7 @@ const OwnerCompModifyModal = ({
 
     if (modalMode == "Edit") {
       Log(
-        "Checking form validity. Form Data - " + Object.values(editFields),
+        "Checking form validity for edit. Form Data - " + Object.values(editFields),
         showLogs
       );
       return Object.values(editFields).every((value) => value || value === 0);
@@ -103,7 +105,7 @@ const OwnerCompModifyModal = ({
   const HandleFieldValueChange = (e) => {
     const { name, value } = e.target;
     Log(
-      "Handling Field Value Change | Field: " + name + " | Value: " + value,
+      "Handling Field Value Change | Field: " + name + " | Value: " + value + " | In modal mode: " + modalMode,
       showLogs
     );
     if (modalMode == "Add") setAddFields({ ...addFields, [name]: value });

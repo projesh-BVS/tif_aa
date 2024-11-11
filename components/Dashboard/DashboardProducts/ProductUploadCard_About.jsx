@@ -9,8 +9,10 @@ const ProductUploadCard_About = ({
   handleChange,
   handleDropdown,
   fieldsData = null,
+  callback_hasExceededProductLimit = null,
 }) => {
   var formattedCompanyList = GetFormattedCompanies(companyList);
+  const [hasExceededProductLimit, setHasExceededProductLimit] = useState(false);
 
   const [currSelectedCompany, setCurrSelectedCompany] = useState(
     fieldsData === null
@@ -22,7 +24,7 @@ const ProductUploadCard_About = ({
 
   var formattedCategoryList = GetFormattedCategories(currSelectedCompany);
   var formattedOutletList = GetFormattedOutlets(currSelectedCompany);
-  console.log("OUTLET LIST: " + JSON.stringify(formattedOutletList));
+  //console.log("OUTLET LIST: " + JSON.stringify(formattedOutletList));
 
   const [currSelectedCategory, setCurrSelectedCategory] = useState(
     fieldsData === null
@@ -39,7 +41,18 @@ const ProductUploadCard_About = ({
     )
   );
 
+  function HandleProductLimitCalc() {
+    if(!callback_hasExceededProductLimit) return;
+    console.log("Product Limit:" + currSelectedCompany.apiVal.productLimitLeft);
+    setHasExceededProductLimit(currSelectedCompany.apiVal.productLimitLeft <= 0);    
+  }
+
   useEffect(() => {
+    if(callback_hasExceededProductLimit) callback_hasExceededProductLimit(hasExceededProductLimit);
+  }, [hasExceededProductLimit])
+
+  useEffect(() => {
+    HandleProductLimitCalc();
     handleDropdown("companyID", currSelectedCompany.id);
   }, [currSelectedCompany]);
 
@@ -64,12 +77,13 @@ const ProductUploadCard_About = ({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 p-2 lg:p-4 h-auto gap-4 w-full">
         {/* Company Dropdown */}
-        <ProductUploadFormListbox
+        <ProductUploadFormListbox        
           labelText="Company"
           optionsArray={formattedCompanyList}
           onOptionSelect={setCurrSelectedCompany}
           //onOptionSelect={() => console.log("onOptionSelect for Company called")}
           initialSelected={currSelectedCompany}
+          isDisabled={false}
         />
         {console.log("while rendering " + currSelectedCategory.display)}
 
@@ -81,6 +95,7 @@ const ProductUploadCard_About = ({
           initialSelected={currSelectedOutlet}
           isDependant={true}
           isMultiSelect={true}
+          isDisabled={hasExceededProductLimit}
         />
 
         {/* Category Dropdown */}
@@ -90,6 +105,7 @@ const ProductUploadCard_About = ({
           onOptionSelect={setCurrSelectedCategory}
           initialSelected={currSelectedCategory}
           isDependant={true}
+          isDisabled={hasExceededProductLimit}
         />
 
         <ProductUploadFormField
@@ -105,6 +121,7 @@ const ProductUploadCard_About = ({
               : null
           }
           handleChange={handleChange}
+          isDisabled={hasExceededProductLimit}
         />
 
         <div className="col-span-full">
@@ -115,6 +132,7 @@ const ProductUploadCard_About = ({
             fieldLabel="Product Name"
             fieldValue={fieldsData === null ? "" : fieldsData.productName}
             handleChange={handleChange}
+            isDisabled={hasExceededProductLimit}
           />
         </div>
 
@@ -136,9 +154,12 @@ const ProductUploadCard_About = ({
             multiline={true}
             fieldValue={fieldsData === null ? "" : fieldsData.description}
             handleChange={handleChange}
+            isDisabled={hasExceededProductLimit}
           />
         </div>
       </div>
+
+      
     </section>
   );
 };
@@ -217,16 +238,16 @@ export function GetDataCompanyIndex(formattedCompanyArray, dataCompanyID) {
 
 export function GetDataCategoryIndex(formatttedCategoryArray, category) {
   for (let index = 0; index < formatttedCategoryArray.length; index++) {
-    console.log(
+    /*console.log(
       "Checking Index: " +
         index +
         " | formatttedCategoryArray[index]: " +
         formatttedCategoryArray[index].display +
         " look for " +
         category
-    );
+    );*/
     if (formatttedCategoryArray[index].display === category) {
-      console.log("Data Returning index: " + index);
+      //console.log("Data Returning index: " + index);
       return index;
     }
   }
@@ -237,7 +258,7 @@ export function GetDataOutletSelectedArray(
   formattedOutletsArray,
   productOutletIDs
 ) {
-  console.log("PRODUCT OUTLET IDS - " + JSON.stringify(productOutletIDs));
+  //console.log("PRODUCT OUTLET IDS - " + JSON.stringify(productOutletIDs));
   let dataSelectedArray = [];
   dataSelectedArray.length = 0;
 
@@ -247,14 +268,14 @@ export function GetDataOutletSelectedArray(
       productOutletIndex < productOutletIDs.length;
       productOutletIndex++
     ) {
-      console.log(
+      /*console.log(
         "Checking Index: " +
           index +
           " | formattedOutletArray[index]: " +
           formattedOutletsArray[index].id +
           " look for " +
           productOutletIDs[productOutletIndex]
-      );
+      );*/
       if (
         formattedOutletsArray[index].id === productOutletIDs[productOutletIndex]
       ) {
@@ -263,7 +284,7 @@ export function GetDataOutletSelectedArray(
     }
   }
 
-  console.log("Current Selected Outlets Length - " + dataSelectedArray.length);
+  //console.log("Current Selected Outlets Length - " + dataSelectedArray.length);
   if (dataSelectedArray.length > 0) return dataSelectedArray;
   else return formattedOutletsArray;
 }

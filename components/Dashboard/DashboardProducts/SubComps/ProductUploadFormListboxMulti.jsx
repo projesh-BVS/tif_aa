@@ -9,15 +9,16 @@ const ProductUploadFormListboxMulti = ({
   showBelow = true,
   isDependant = false,
   initialSelected = null,
+  isDisabled = false,
 }) => {
-  console.log(
+  /*console.log(
     "Initial Data in List Box Multi " +
       labelText +
       " Options Array - " +
       JSON.stringify(optionsArray) +
       " | Initial Selected - " +
       JSON.stringify(initialSelected)
-  );
+  );*/
 
   const [selectedOptions, setSelectedOptions] = useState(
     initialSelected === null
@@ -91,7 +92,7 @@ const ProductUploadFormListboxMulti = ({
             {labelText}
           </Listbox.Label>
         </div>
-        <Listbox.Button className="relative w-full h-11 cursor-pointer rounded-lg bg-tif-blue hover:bg-tif-lavender text-white text-sm lg:text-base py-2 pl-4 pr-10 text-left hover:shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-tif-pink">
+        <Listbox.Button className={`${isDisabled ? "pointer-events-none bg-tif-blue/50" : "pointer-events-auto bg-tif-blue"} relative w-full h-11 cursor-pointer rounded-lg  hover:bg-tif-lavender text-white text-sm lg:text-base py-2 pl-4 pr-10 text-left hover:shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-tif-pink`}>
           <span className="block truncate">
             {initialSelected.map((outlet) => outlet.display).join(", ")}
             {initialSelected.length === 0 && "No outlets specified"}

@@ -10,6 +10,7 @@ import {
   GetCompanyChangeMsg_Cat_Delete,
   GetCompanyChangeMsg_Cat_Edit,
   GetCompanyChangeMsg_Info_Update,
+  GetCompanyChangeMsg_InfoURL_Failed,
 } from "@/libs/Company Libs/CompanyChangeMsgs";
 import {
   CloudArrowUpIcon,
@@ -17,6 +18,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const EditCompany = ({ params }) => {
@@ -28,6 +30,7 @@ const EditCompany = ({ params }) => {
     isCompanyValidating,
   } = useCompany(params.companyID);
 
+  const router = useRouter();
   const [isUploadingData, setIsUploadingData] = useState(false);
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [showStatusNotification, setShowStatusNotification] = useState(false);
@@ -35,6 +38,7 @@ const EditCompany = ({ params }) => {
     useState(null);
   const [fields, setFields] = useState({
     companyID: "",
+    companyURL: "",
     companyLogo: "",
     companyName: "",
     companyAddress: "",
@@ -64,7 +68,7 @@ const EditCompany = ({ params }) => {
 
   const HandleFieldValueChange = (e) => {
     const { name, value } = e.target;
-    setFields({ ...fields, [name]: value });
+    setFields({ ...fields, [name]: value });    
   };
 
   const HandleFileValueChange = (e) => {
@@ -98,9 +102,11 @@ const EditCompany = ({ params }) => {
           );
           setStatusNotificationContent(GetCompanyChangeMsg_Info_Update(false));
         }
-      } catch (err) {
-        console.log("Company Update Failed | Error: " + JSON.stringify(err));
-        setStatusNotificationContent(GetCompanyChangeMsg_Info_Update(false));
+      } catch (err) {        
+        console.log("Company Update Failed | Error: " + JSON.stringify(err));        
+        console.log(err.response.status);
+        if(err.response.status == 409) setStatusNotificationContent(GetCompanyChangeMsg_InfoURL_Failed());
+        else setStatusNotificationContent(GetCompanyChangeMsg_Info_Update(false));
       }
       setIsUploadingData(false);
       setShowStatusNotification(true);
@@ -341,7 +347,7 @@ const EditCompany = ({ params }) => {
                 </button>
                 <button
                   disabled={isUploadingData}
-                  //onClick={promtDelete}
+                  onClick={(e) => {e.preventDefault(); router.push("/dashboard/companies")}}                  
                   className="flex p-4 gap-4 items-center justify-center w-full rounded-xl hover:shadow-lg disabled:shadow-none font-semibold text-lg text-white bg-red-500 hover:bg-red-700 disabled:bg-red-500/40 transition-all"
                 >
                   {isUploadingData && (

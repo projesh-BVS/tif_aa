@@ -8,7 +8,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-const ProductUploadCard_Model = ({ handleFile, fieldsData = null }) => {
+const ProductUploadCard_Model = ({ handleFile, fieldsData = null, hasExceededProductLimit }) => {
   useEffect(() => {
     // This is where we will initialize Model Viewer.
     // We'll do this asynchronously because it's a heavy operation.
@@ -80,6 +80,7 @@ const ProductUploadCard_Model = ({ handleFile, fieldsData = null }) => {
           isUploadingCallback={callback_IsUploading}
           statusIsUploading={statusIsUploading}
           uploadingCardName={currentUploadingCardName}
+          hasExceededProductLimit={hasExceededProductLimit}
         />
         <FileUploadCard
           displayName={"USDZ"}
@@ -89,6 +90,7 @@ const ProductUploadCard_Model = ({ handleFile, fieldsData = null }) => {
           isUploadingCallback={callback_IsUploading}
           statusIsUploading={statusIsUploading}
           uploadingCardName={currentUploadingCardName}
+          hasExceededProductLimit={hasExceededProductLimit}
         />
         <FileUploadCard
           displayName={"Poster"}
@@ -98,6 +100,7 @@ const ProductUploadCard_Model = ({ handleFile, fieldsData = null }) => {
           isUploadingCallback={callback_IsUploading}
           statusIsUploading={statusIsUploading}
           uploadingCardName={currentUploadingCardName}
+          hasExceededProductLimit={hasExceededProductLimit}
         />
       </div>
     </section>
@@ -201,6 +204,7 @@ export function FileUploadCard({
   statusIsUploading,
   uploadingCardName,
   handleFile,
+  hasExceededProductLimit,
 }) {
   const [file, setFile] = useState(null);
   const [isTypeError, setTypeError] = useState(false);
@@ -208,7 +212,7 @@ export function FileUploadCard({
   const [isInDropZone, setIsInDropZone] = useState(false);
   const [uploadPercent, setUploadPercent] = useState(0);
 
-  const isCardDisabled = statusIsUploading && uploadingCardName != displayName;
+  const isCardDisabled = statusIsUploading && uploadingCardName != displayName;  
 
   const handleChange = (file) => {
     setFile(file);
@@ -296,8 +300,8 @@ export function FileUploadCard({
 
   return (
     <>
-      {!isCardDisabled && (
-        <FileUploader
+      {!isCardDisabled && !hasExceededProductLimit && (
+        <FileUploader              
           types={fileTypes}
           multiple={false}
           handleChange={handleChange}
@@ -410,6 +414,13 @@ export function FileUploadCard({
         <div className="flex flex-col items-center justify-center w-full h-full p-4 bg-red-200 text-red-900 rounded-2xl">
           <h1>Please wait for</h1>
           <h1>{uploadingCardName + " to finish uploading"}</h1>
+        </div>
+      )}
+
+      {hasExceededProductLimit && (
+        <div className="flex flex-col items-center justify-center w-full h-full p-4 bg-red-200 text-red-900 rounded-2xl">
+          <h1>Cannot Upload</h1>
+          <h1>Product Limit Exceeded</h1>
         </div>
       )}
     </>

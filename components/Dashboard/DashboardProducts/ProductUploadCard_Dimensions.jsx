@@ -12,6 +12,7 @@ const ProductUploadCard_Dimensions = ({
   handleChange,
   handleDropdown,
   fieldsData=null,
+  hasExceededProductLimit,
 }) => {
   const [selectedDimUnit, setSelectedDimUnit] = useState(
     fieldsData === null
@@ -44,6 +45,7 @@ const ProductUploadCard_Dimensions = ({
             optionsArray={dimensionUnits}
             onOptionSelect={setSelectedDimUnit}
             initialSelected={selectedDimUnit}
+            isDisabled={hasExceededProductLimit}
           />
         </div>
         <div className="col-span-full md:col-span-1">
@@ -52,6 +54,7 @@ const ProductUploadCard_Dimensions = ({
             optionsArray={weightUnits}
             onOptionSelect={setSelectedWtUnit}
             initialSelected={selectedWtUnit}
+            isDisabled={hasExceededProductLimit}
           />
         </div>
         <ProductUploadFormField
@@ -61,6 +64,7 @@ const ProductUploadCard_Dimensions = ({
           fieldLabel="Length"
           fieldValue={fieldsData === null ? "" : fieldsData.productLength}
           handleChange={handleChange}
+          isDisabled={hasExceededProductLimit}
         />
         <ProductUploadFormField
           fieldID="productWidth"
@@ -69,6 +73,7 @@ const ProductUploadCard_Dimensions = ({
           fieldLabel="Width"
           fieldValue={fieldsData === null ? "" : fieldsData.width}
           handleChange={handleChange}
+          isDisabled={hasExceededProductLimit}
         />
         <ProductUploadFormField
           fieldID="productHeight"
@@ -77,6 +82,7 @@ const ProductUploadCard_Dimensions = ({
           fieldLabel="Height"
           fieldValue={fieldsData === null ? "" : fieldsData.height}
           handleChange={handleChange}
+          isDisabled={hasExceededProductLimit}
         />
         <ProductUploadFormField
           fieldID="productWeight"
@@ -85,6 +91,7 @@ const ProductUploadCard_Dimensions = ({
           fieldLabel="Weight"
           fieldValue={fieldsData === null ? "" : fieldsData.weight}
           handleChange={handleChange}
+          isDisabled={hasExceededProductLimit}
         />
       </div>
     </section>

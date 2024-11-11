@@ -22,6 +22,8 @@ const ProductView = ({ params }) => {
   );
   const [showVariantSelector, setShowVariantSelector] = useState(false);
 
+  console.log(product);
+
   let modelViewerVariants = null;
   let modelVariantNames = null;
   let select = null;

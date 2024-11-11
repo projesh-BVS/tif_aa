@@ -7,8 +7,8 @@ import {
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
-const CompanyInfoCard = ({ index, companyInfo }) => {
-  return (
+const CompanyInfoCard = ({ index, companyInfo }) => {  
+  return (    
     <section
       className="animate-slideInSpringedLeft flex flex-col md:flex-row p-2 lg:p-4 gap-2 items-center justify-between w-full rounded-2xl shadow-md bg-white"
       style={{ animationDelay: `${index * 50}ms` }}

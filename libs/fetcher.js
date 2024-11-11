@@ -54,7 +54,7 @@ export async function fetcher_AllCompanies(companyList) {
 }
 
 export async function fetcher_Product(productID) {
-  const response = await fetch(product_baseURL + productID);
+  const response = await fetch(product_baseURL + productID + "&isAdmin=true"); 
   const data = await response.json();
   return data;
 }

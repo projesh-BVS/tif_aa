@@ -15,7 +15,7 @@ const CompanyUploadCard_About = ({
   onFieldChangeCallback,
   onFileChangeCallback,
 }) => {
-  const [logoFile, setLogoFile] = useState(null);
+  const [logoFile, setLogoFile] = useState(null);  
 
   const fileSelected = (file, fileType) => {
     switch (fileType[0]) {
@@ -41,7 +41,7 @@ const CompanyUploadCard_About = ({
 
   useEffect(() => {
     if (fieldsData != null) {
-      setLogoFile(fieldsData.companyLogo);
+      setLogoFile(fieldsData.companyLogo);      
     }
   }, [fieldsData]);
 
@@ -67,6 +67,18 @@ const CompanyUploadCard_About = ({
       </div>
 
       <div className="flex flex-col items-center justify-center p-2 lg:p-4 h-auto gap-4 w-full">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 w-full">
+          <h1 className="font-medium text-gray-400">consumar.tryitfirst.in/</h1>
+          <CompanyUploadFormField 
+            fieldID="companyURL"
+            fieldName="companyURL"
+            fieldType="text"
+            fieldLabel="Company URL"
+            fieldValue={fieldsData.companyURL? fieldsData.companyURL : fieldsData.companyID}
+            handleChange={onFieldChangeCallback}
+          />
+        </div>
+
         <CompanyUploadFormField
           fieldID="companyName"
           fieldName="companyName"
