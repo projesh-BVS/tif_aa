@@ -31,10 +31,13 @@ const ReportsTable = ({ index, companyInfo }) => {
       {analytics && analytics.data && analytics.data.length == 0 && (
         <section className="flex flex-col p-4 gap-2 items-center justify-between w-full text-red-500">
           <span className="font-semibold lg:text-xl">
-            Sorry, there was an error while loading data
+            Sorry, no analytics data found for{" "}
+            <span className="italic text-tif-blue">
+              {companyInfo.companyName}
+            </span>
           </span>
           <span className="font-light text-xs lg:text-sm">
-            Please refresh the page if you still see an error after 30 secs
+            This page will show analytics when they have been generated
           </span>
         </section>
       )}
@@ -61,11 +64,44 @@ const ReportsTable = ({ index, companyInfo }) => {
               OnViewModeChangeCallback={Callback_OnViewModeChange}
             />
             {reportViewMode === 1 && (
-              <ReportsTableContent analyticsInfo={analytics.data} />
+              <>
+                <ReportsTableContent
+                  tableName={"Product Report"}
+                  analyticsInfo={analytics.data}
+                  tableColumns={[
+                    { name: "Product Name", selector: (row) => row.productName, sortable: true },
+                    { name: "Product ID", selector: (row) => row.productID, sortable: true },
+                    { name: "Product SKU", selector: (row) => row.productSKU, sortable: true },
+                    { name: "Views 360", selector: (row) => row.views360, sortable: true },
+                    { name: "Duration 360", selector: (row) => row.duration360, sortable: true },
+                    { name: "Loadtime 360", selector: (row) => row.Loadtime360, sortable: true },
+                    { name: "Views AR", selector: (row) => row.ARviews, sortable: true },                    
+                    { name: "Wishlist Clicks", selector: (row) => row.clicksToWishlist, sortable: true },
+                    { name: "Variant Change Clicks", selector: (row) => row.clickToColorChange, sortable: true },
+                  ]}
+                />
+
+                <ReportsTableContent
+                  tableName={"Category Report"}
+                  analyticsInfo={analytics.catData}
+                  tableColumns={[
+                    {
+                      name: "Category",
+                      selector: (row) => row.catName,
+                      sortable: true,
+                    },
+                    {
+                      name: "Views",
+                      selector: (row) => row.catView,
+                      sortable: true,
+                    },                    
+                  ]}
+                />
+              </>
             )}
 
             {reportViewMode === 0 && (
-              <ReportsGraphsContent analyticsInfo={analytics.data} />
+              <ReportsGraphsContent analyticsInfo={analytics} />
             )}
           </section>
         )}
